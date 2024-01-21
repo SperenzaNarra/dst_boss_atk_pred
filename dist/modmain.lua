@@ -44,6 +44,7 @@ local showname = GetModConfigData("showname")
 -- hound
 AddClassPostConstruct("widgets/controls", function(hud)
 	print("Start to construct Hound Attack Predictor Widget")
+	if not GetModConfigData("houndenable") then return end
 
 	local width = widgetwidth
 	local height = widgetheight
@@ -101,6 +102,7 @@ end)
 -- bosses
 AddClassPostConstruct("widgets/controls", function(hud)
 	print("[boss attack predictor] Start to construct Bosses Attack Predictor Widget")
+	if not GetModConfigData("bossenable") then return end
 
 	local width = widgetwidth
 	local height = widgetheight

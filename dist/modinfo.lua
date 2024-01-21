@@ -1,7 +1,7 @@
 name = "Boss Attack Predictor"
 
 description = "Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor\n\nDon't Starve Together only"
-author = "Sperenza"
+author = "Sperenza & YiFei Zhu"
 version = "1.3.1"
 
 api_version_dst = 10
@@ -129,6 +129,16 @@ configuration_options = {
 		default = 80
 	},
 	{
+		name = "houndenable",
+		label = "Hound",
+		hover = "Display Hound Widget",
+		options = {
+			{description = "Enabled", data = true},
+			{description = "Disabled", data = false},
+		},
+		default = true
+	},
+	{
 		name = "houndposX",
 		label = "Hound Pos X",
 		options = {
@@ -159,6 +169,16 @@ configuration_options = {
 			{description = "120", data=120},
 		},
 		default = 80
+	},
+	{
+		name = "bossenable",
+		label = "Boss",
+		hover = "Display Boss Widget",
+		options = {
+			{description = "Enabled", data = true},
+			{description = "Disabled", data = false},
+		},
+		default = true
 	},
 	{
 		name = "bossposX",
