@@ -6,8 +6,8 @@ local worldtimerkey = {
 	malbatross 	= "malbatross_timetospawn",
 	-- cave
 	toadstool   = "toadstool_respawntask",
-	
-    -- insttimerkey
+
+	-- insttimerkey
 	antlion				= "rage",
 	beequeenhive		= "hivegrowth",
 	dragonfly_spawner 	= "regen_dragonfly",
@@ -37,8 +37,8 @@ local nametotag = {
 local nametoattacktimefirst = {
 	antlion				= true,
 	atrium_gate			= false,
-	atrium_gate_cooldown= false, 
-	atrium_gate_destable= true, 
+	atrium_gate_cooldown= false,
+	atrium_gate_destable= true,
 	bearger				= true,
 	beequeenhive		= false,
 	crabking_spawner	= false,

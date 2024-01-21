@@ -11,17 +11,17 @@ local function abs(n)
 end
 
 function alterconsole:c_findone(prefab)
-    for k,v in pairs(Ents) do
-        if v.prefab == prefab then
-            return v
-        end
-    end
+	for k,v in pairs(Ents) do
+		if v.prefab == prefab then
+			return v
+		end
+	end
 
-    return nil
+	return nil
 end
 
 function alterconsole:recalculatePostion(align, xPos, yPos)
-	
+
 	-- all value should be positive
 	xPos = abs(xPos)
 	yPos = abs(yPos)

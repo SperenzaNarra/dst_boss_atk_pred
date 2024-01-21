@@ -11,22 +11,22 @@ local widgetheight = GetModConfigData("widgetheight")
 
 Assets =
 {
-    Asset("ATLAS", "images/script/ancient_gatewaywidget.xml"),
-    Asset("ATLAS", "images/script/antlionwidget.xml"),
-    Asset("ATLAS", "images/script/atrium_resetwidget.xml"),
-    Asset("ATLAS", "images/script/beargerwidget.xml"),
-    Asset("ATLAS", "images/script/beequeenhivewidget.xml"),
-    Asset("ATLAS", "images/script/cavewidget.xml"),
-    Asset("ATLAS", "images/script/crabkingwidget.xml"),
-    Asset("ATLAS", "images/script/deerclopswidget.xml"),
-    Asset("ATLAS", "images/script/depthwormswidget.xml"),
-    Asset("ATLAS", "images/script/dragonflywidget.xml"),
-    Asset("ATLAS", "images/script/fruitflywidget.xml"),
-    Asset("ATLAS", "images/script/klauswidget.xml"),
-    Asset("ATLAS", "images/script/malbatrosswidget.xml"),
-    Asset("ATLAS", "images/script/masterwidget.xml"),
-    Asset("ATLAS", "images/script/toadstoolwidget.xml"),
-	
+	Asset("ATLAS", "images/script/ancient_gatewaywidget.xml"),
+	Asset("ATLAS", "images/script/antlionwidget.xml"),
+	Asset("ATLAS", "images/script/atrium_resetwidget.xml"),
+	Asset("ATLAS", "images/script/beargerwidget.xml"),
+	Asset("ATLAS", "images/script/beequeenhivewidget.xml"),
+	Asset("ATLAS", "images/script/cavewidget.xml"),
+	Asset("ATLAS", "images/script/crabkingwidget.xml"),
+	Asset("ATLAS", "images/script/deerclopswidget.xml"),
+	Asset("ATLAS", "images/script/depthwormswidget.xml"),
+	Asset("ATLAS", "images/script/dragonflywidget.xml"),
+	Asset("ATLAS", "images/script/fruitflywidget.xml"),
+	Asset("ATLAS", "images/script/klauswidget.xml"),
+	Asset("ATLAS", "images/script/malbatrosswidget.xml"),
+	Asset("ATLAS", "images/script/masterwidget.xml"),
+	Asset("ATLAS", "images/script/toadstoolwidget.xml"),
+
 	Asset("ATLAS", "images/houndswidget.xml"),
 	Asset("ATLAS", "images/depthwormswidget.xml"),
 }
@@ -48,8 +48,8 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	local width = widgetwidth
 	local height = widgetheight
 	local xPos, yPos, hAnchor, vAnchor = altercmd:recalculatePostion(
-		GetModConfigData("widgetalign"), 
-		GetModConfigData("houndposX"), 
+		GetModConfigData("widgetalign"),
+		GetModConfigData("houndposX"),
 		GetModConfigData("houndposY")
 	)
 
@@ -105,8 +105,8 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	local width = widgetwidth
 	local height = widgetheight
 	local xPos, yPos, hAnchor, vAnchor = altercmd:recalculatePostion(
-		GetModConfigData("widgetalign"), 
-		GetModConfigData("bossposX"), 
+		GetModConfigData("widgetalign"),
+		GetModConfigData("bossposX"),
 		GetModConfigData("bossposY")
 	)
 
@@ -161,7 +161,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 					updatetimer(name, timer)
 				end
 			end
-				
+
 			if bossprioritytype == "spawntimefirst" then
 				if nametoattack == nil or (not bosses:GetSpawnPriority(nametoattack)) or bosses:GetSpawnPriority(name) then
 					updatetimer(name, timer)
@@ -238,7 +238,7 @@ local predict_constructor = function(inst, name, key, isinst)
 
 	inst[time_to_attack] = nil
 	inst[net_time_to_attack] = GLOBAL.net_int(inst.GUID, time_to_attack, time_to_attack_dirty)
-	
+
 	-- client
 	if not GLOBAL.TheNet:IsDedicated() then
 		inst:ListenForEvent(time_to_attack_dirty, function(inst)
@@ -257,7 +257,7 @@ local predict_constructor = function(inst, name, key, isinst)
 
 	-- server
 	local forcefind = true
-	
+
 	inst:DoPeriodicTask(60.0, function()
 		bosses:FindBossEntity(name)
 		forcefind = false
