@@ -39,4 +39,23 @@ function alterconsole:recalculatePostion(align, xPos, yPos)
 	assert(false)
 end
 
+
+local pos_counter = 0
+function alterconsole:getPosition(align, xPos, yPos, padding)
+	local res = xPos + padding * pos_counter
+	pos_counter = pos_counter + 1
+
+	if align == "lefttop" then
+		return res, -yPos, ANCHOR_LEFT, ANCHOR_TOP
+	elseif align == "righttop" then
+		return -res, -yPos, ANCHOR_RIGHT, ANCHOR_TOP
+	elseif align == "leftbottom" then
+		return res, yPos, ANCHOR_LEFT, ANCHOR_BOTTOM
+	elseif align == "rightbottom" then
+		return -res, yPos, ANCHOR_RIGHT, ANCHOR_BOTTOM
+	end
+	-- wrong align value
+	assert(false)
+end
+
 return alterconsole
