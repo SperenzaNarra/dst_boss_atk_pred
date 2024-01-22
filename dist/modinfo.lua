@@ -1,6 +1,6 @@
 name = "Boss Attack Predictor"
 
-description = "Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor\n\nDon't Starve Together only"
+description = "Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only"
 author = "Sperenza & YiFei Zhu"
 version = "2.0.1"
 
