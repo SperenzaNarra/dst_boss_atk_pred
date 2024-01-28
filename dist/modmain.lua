@@ -62,14 +62,9 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 	local width = widgetwidth
 	local height = widgetheight
-	-- local xPos, yPos, hAnchor, vAnchor = altercmd:recalculatePostion(
-	-- 	GetModConfigData("widgetalign"),
-	-- 	GetModConfigData("houndposX"),
-	-- 	GetModConfigData("houndposY")
-	-- )
 	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigData("widgetalign"), 
-		widget_xPos, widget_yPos, 
+		GetModConfigData("widgetalign"),
+		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
 	local container = hud:AddChild(Widget("RPGMonsterInfoContainer"))
@@ -124,14 +119,9 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 	local width = widgetwidth
 	local height = widgetheight
-	-- local xPos, yPos, hAnchor, vAnchor = altercmd:recalculatePostion(
-	-- 	GetModConfigData("widgetalign"),
-	-- 	GetModConfigData("bossposX"),
-	-- 	GetModConfigData("bossposY")
-	-- )
 	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigData("widgetalign"), 
-		widget_xPos, widget_yPos, 
+		GetModConfigData("widgetalign"),
+		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
 	print("[boss attack predictor] get widget width  " .. widgetwidth .. "px")
@@ -238,14 +228,9 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 	local width = widgetwidth
 	local height = widgetheight
-	-- local xPos, yPos, hAnchor, vAnchor = altercmd:recalculatePostion(
-	-- 	GetModConfigData("widgetalign"),
-	-- 	GetModConfigData("riftposX"),
-	-- 	GetModConfigData("riftposY")
-	-- )
 	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigData("widgetalign"), 
-		widget_xPos, widget_yPos, 
+		GetModConfigData("widgetalign"),
+		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
 	local container = hud:AddChild(Widget("RPGMonsterInfoContainer"))

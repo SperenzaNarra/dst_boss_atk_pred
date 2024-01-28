@@ -1,8 +1,281 @@
-name = "Boss Attack Predictor"
+local STRINGS = {
+	{
+		en = "Boss Attack Predictor",
+		zh = "Boss预测器",
+	},
+	{
+		en = "Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only",
+		zh = "本插件功能是将DST纯净Boss会出现的时间显示在左上角的贴图上，或者任何你想放的角落\n有猎犬预测器的功能，并且有侦测裂隙循环的功能，能够自由开关闭其中的组件\n\n饥荒联机版专属",
+	},
+	{
+		en = "Show Name",
+		zh = "显示名称",
+	},
+	{
+		en = "The predictor will show the name of warnings",
+		zh = "预测器将显示威胁的名称",
+	},
+	{
+		en = "Enabled",
+		zh = "开启",
+	},
+	{
+		en = "Disabled",
+		zh = "关闭",
+	},
+	{
+		en = "Priority type",
+		zh = "优先策略",
+	},
+	{
+		en = "Choose the priority of warnings",
+		zh = "选择优先类型",
+	},
+	{
+		en = "Earliest",
+		zh = "时间优先",
+	},
+	{
+		en = "Prioritize the earliest event",
+		zh = "优先最先会发生的威胁",
+	},
+	{
+		en = "Attack",
+		zh = "袭击优先",
+		disamb = "priority"
+	},
+	{
+		en = "Prioritize Antlion, Bearger, and Deerclops",
+		zh = "会优先狮蚁，熊獾，和独眼巨鹿",
+	},
+	{
+		en = "Spawn",
+		zh = "生成优先",
+		disamb = "priority"
+	},
+	{
+		en = "Prioritize Crabking, Dragonfly, Klaus, Malbatross, and Toadstool",
+		zh = "会优先帝王蟹，龙蝇，克劳斯，邪天翁，和蟾蜍王",
+	},
+	{
+		en = "Hound",
+		zh = "猎犬",
+	},
+	{
+		en = "Display Hound Widget",
+		zh = "显示侦测猎犬组件",
+	},
+	{
+		en = "Display Boss Widget",
+		zh = "显示侦测Boss组件",
+	},
+	{
+		en = "Rift",
+		zh = "裂隙循环",
+	},
+	{
+		en = "Display Rift Widget",
+		zh = "显示侦测裂隙循环组件",
+	},
+	{
+		en = "Widget Setting",
+		zh = "组件设置",
+	},
+	{
+		en = "Font Size",
+		zh = "字体大小",
+	},
+	{
+		en = "Padding",
+		zh = "组件间距",
+	},
+	{
+		en = "Distance Between Widgets",
+		zh = "组件之间的距离",
+	},
+	{
+		en = "X Pos",
+		zh = "X 坐标",
+	},
+	{
+		en = "Y Pos",
+		zh = "Y 坐标",
+	},
+	{
+		en = "Align",
+		zh = "对齐",
+	},
+	{
+		en = "Top Left",
+		zh = "左上",
+	},
+	{
+		en = "Top Right",
+		zh = "右上",
+	},
+	{
+		en = "Bottom Left",
+		zh = "左下",
+	},
+	{
+		en = "Bottom Right",
+		zh = "右下",
+	},
+	{
+		en = "Width",
+		zh = "宽",
+	},
+	{
+		en = "Height",
+		zh = "高",
+	},
+	{
+		en = "Antlion",
+		zh = "狮蚁",
+	},
+	{
+		en = "Attack",
+		zh = "袭击",
+		disamb = "title"
+	},
+	{
+		en = "Display Antlion Rage Attack",
+		zh = "显示狮蚁袭击时间",
+	},
+	{
+		en = "Bearger",
+		zh = "熊獾",
+	},
+	{
+		en = "Display Bearger Attack Time",
+		zh = "显示熊獾袭击时间",
+	},
+	{
+		en = "Deerclops",
+		zh = "独眼巨鹿",
+	},
+	{
+		en = "Display Deerclops Attack Time",
+		zh = "显示独眼巨鹿袭击时间",
+	},
+	{
+		en = "Spawn",
+		zh = "生成",
+		disamb = "title"
+	},
+	{
+		en = "Bee Queen",
+		zh = "蜂后",
+	},
+	{
+		en = "Display Bee Queen Hive Spawn Time",
+		zh = "显示蜂后蜂巢生成时间",
+	},
+	{
+		en = "Crab King",
+		zh = "帝王蟹",
+	},
+	{
+		en = "Display Crabking Spawn Time",
+		zh = "显示帝王蟹生成时间",
+	},
+	{
+		en = "Dragonfly",
+		zh = "龙蝇",
+	},
+	{
+		en = "Display Dragonfly Spawn Time",
+		zh = "显示龙蝇生成时间",
+	},
+	{
+		en = "Lord of the Fruit Flies",
+		zh = "果蝇王",
+	},
+	{
+		en = "Display Lord of the Fruit Flies Spawn Time",
+		zh = "显示果蝇王袭击时间",
+	},
+	{
+		en = "Malbatross",
+		zh = "邪天翁",
+	},
+	{
+		en = "Display Malbatross Spawn Time",
+		zh = "显示邪天翁袭击时间",
+	},
+	{
+		en = "Klaus",
+		zh = "克劳斯",
+	},
+	{
+		en = "Display Klaus Loot Stash Spawn Time",
+		zh = "显示克劳斯赃物袋生成时间",
+	},
+	{
+		en = "Toadstool",
+		zh = "蟾蜍王",
+	},
+	{
+		en = "Display Toadstool Spawn Time",
+		zh = "显示蟾蜍王生成时间",
+	},
+	{
+		en = "Gateway Cooldown",
+		zh = "远古大门的冷却",
+	},
+	{
+		en = "Display Ancient Gateway Cooldown Time",
+		zh = "显示远古大门的冷却时间",
+	},
+	{
+		en = "Ruins Reset",
+		zh = "遗迹的重制",
+	},
+	{
+		en = "Display Ruins Regeneration Time",
+		zh = "显示遗迹的重制时间",
+	},
+}
 
-description = "Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only"
+-- pairs & ipairs are not defined in this context; see ModIndex:InitializeModInfo
+local function values(t)
+	local i = 0
+	return function() i = i + 1; return t[i] end
+end
+
+local function t(str, disamb)
+	-- See languages/loc.lua for valid language codes
+	local fallbacktable = {
+		zht="zh",
+		zhr="zh",
+	}
+
+	if locale == nil or locale == "en" then return str end
+
+	for entry in values(STRINGS) do
+		if entry.en == str and entry.disamb == disamb then
+			local curlocale = locale
+
+			while curlocale ~= nil do
+				if entry[curlocale] ~= nil then
+					return entry[curlocale]
+				end
+
+				curlocale = fallbacktable[curlocale]
+			end
+
+			return str
+		end
+	end
+
+	return str
+end
+
+name = t("Boss Attack Predictor")
+
+description = t("Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only")
 author = "Sperenza & YiFei Zhu"
-version = "2.0.1"
+version = "2.1.0"
 
 api_version_dst = 10
 priority = 0
@@ -35,71 +308,71 @@ end
 configuration_options = {
 	{
 		name = "showname",
-		label = "Show Name",
-		hover = "The predictor will show the name of warnings",
+		label = t("Show Name"),
+		hover = t("The predictor will show the name of warnings"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = false
 	},
 	{
 		name = "prioritytype",
-		label = "Priority type",
-		hover = "Choose the priority of warnings",
+		label = t("Priority type"),
+		hover = t("Choose the priority of warnings"),
 		options = {
 			{
-				description = "Least",
+				description = t("Earliest"),
 				data = "leasttimefirst",
-				hover = "Prioritize the most recent warning event"
+				hover = t("Prioritize the earliest event"),
 			},
 			{
-				description = "Attack",
+				description = t("Attack", "priority"),
 				data = "attacktimefirst",
-				hover = "Prioritize Antlion, Bearger, and Deerclops"
+				hover = t("Prioritize Antlion, Bearger, and Deerclops"),
 			},
 			{
-				description = "Spawn",
+				description = t("Spawn", "priority"),
 				data = "spawntimefirst",
-				hover = "Prioritize Crabking, Dragonfly, Klaus, Malbatross, and Toadstool",
+				hover = t("Prioritize Crabking, Dragonfly, Klaus, Malbatross, and Toadstool"),
 			}
 		},
 		default = "leasttimefirst"
 	},
 	{
 		name = "houndenable",
-		label = "Hound",
-		hover = "Display Hound Widget",
+		label = t("Hound"),
+		hover = t("Display Hound Widget"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "bossenable",
-		label = "Boss",
-		hover = "Display Boss Widget",
+		label = t("Boss"),
+		hover = t("Display Boss Widget"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "riftenable",
-		label = "Rift",
-		hover = "Display Rift Widget",
+		label = t("Rift"),
+		hover = t("Display Rift Widget"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
-	AddTitle("Widget Setting"),
+	AddTitle(t("Widget Setting")),
 	{
 		name = "fontsize",
-		label = "Font Size",
+		label = t("Font Size"),
 		options = {
 			{description = "10", data=10},
 			{description = "11", data=11},
@@ -117,8 +390,8 @@ configuration_options = {
 	},
 	{
 		name = "widgetpadding",
-		label = "Padding",
-		hover = "Distance Between Widgets",
+		label = t("Padding"),
+		hover = t("Distance Between Widgets"),
 		options = {
 			{description = "0",   data=0},
 			{description = "10",  data=10},
@@ -132,11 +405,11 @@ configuration_options = {
 			{description = "90",  data=90},
 			{description = "100", data=100},
 		},
-		default = 0
+		default = 30
 	},
 	{
 		name = "widget_xPos",
-		label = "X Pos",
+		label = t("X Pos"),
 		options = {
 			{description = "0",   data=0},
 			{description = "10",  data=10},
@@ -169,11 +442,11 @@ configuration_options = {
 			{description = "280", data=280},
 			{description = "290", data=290},
 		},
-		default = 80
+		default = 100
 	},
 	{
 		name = "widget_yPos",
-		label = "Y Pos",
+		label = t("Y Pos"),
 		options = {
 			{description = "0",   data=0},
 			{description = "10",  data=10},
@@ -206,22 +479,22 @@ configuration_options = {
 			{description = "280", data=280},
 			{description = "290", data=290},
 		},
-		default = 80
+		default = 100
 	},
 	{
 		name = "widgetalign",
-		label = "Align",
+		label = t("Align"),
 		options = {
-			{description = "Left Top", data = "lefttop"},
-			{description = "Right Top", data = "righttop"},
-			{description = "Left Bottom", data = "leftbottom"},
-			{description = "Right Bottom", data = "rightbottom"},
+			{description = t("Top Left"), data = "lefttop"},
+			{description = t("Top Right"), data = "righttop"},
+			{description = t("Bottom Left"), data = "leftbottom"},
+			{description = t("Bottom Right"), data = "rightbottom"},
 		},
 		default = "lefttop"
 	},
 	{
 		name = "widgetwidth",
-		label = "Width",
+		label = t("Width"),
 		options = {
 			{description = "40", data=40},
 			{description = "50", data=50},
@@ -237,7 +510,7 @@ configuration_options = {
 	},
 	{
 		name = "widgetheight",
-		label = "Height",
+		label = t("Height"),
 		options = {
 			{description = "40", data=40},
 			{description = "50", data=50},
@@ -251,126 +524,126 @@ configuration_options = {
 		},
 		default = 80
 	},
-	AddTitle("Attack"),
+	AddTitle(t("Attack", "title")),
 	{
 		name = "antlion",
-		label = "Antlion",
-		hover = "Display Antlion Rage Attack",
+		label = t("Antlion"),
+		hover = t("Display Antlion Rage Attack"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "bearger",
-		label = "Bearger",
-		hover = "Display Bearger Spawn Time",
+		label = t("Bearger"),
+		hover = t("Display Bearger Attack Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "deerclops",
-		label = "Deerclops",
-		hover = "Display Deerclops Spawn Time",
+		label = t("Deerclops"),
+		hover = t("Display Deerclops Attack Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
-	AddTitle("Spawn"),
+	AddTitle(t("Spawn", "title")),
 	{
 		name = "beequeenhive",
-		label = "Bee Queen",
-		hover = "Display Bee Queen Hive Spawn Time",
+		label = t("Bee Queen"),
+		hover = t("Display Bee Queen Hive Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "crabking_spawner",
-		label = "Crab King",
-		hover = "Display Crabking Spawn Time",
+		label = t("Crab King"),
+		hover = t("Display Crabking Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "dragonfly_spawner",
-		label = "Dragonfly",
-		hover = "Display Dragonfly Spawn Time",
+		label = t("Dragonfly"),
+		hover = t("Display Dragonfly Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "fruitfly",
-		label = "Fruitfly",
-		hover = "Display Fruitfly Spawn Time",
+		label = t("Lord of the Fruit Flies"),
+		hover = t("Display Lord of the Fruit Flies Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = false
 	},
 	{
 		name = "malbatross",
-		label = "Malbatross",
-		hover = "Display Malbatross Spawn Time",
+		label = t("Malbatross"),
+		hover = t("Display Malbatross Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "klaus",
-		label = "Klaus",
-		hover = "Display Klaus Sack Spawn Time",
+		label = t("Klaus"),
+		hover = t("Display Klaus Loot Stash Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 
 	{
 		name = "toadstool",
-		label = "Toadstool",
-		hover = "Display Toadstool Spawn Time",
+		label = t("Toadstool"),
+		hover = t("Display Toadstool Spawn Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "atrium_gate_cooldown",
-		label = "Gateway Cooldown",
-		hover = "Display Ancient Gateway Cooldown Time",
+		label = t("Gateway Cooldown"),
+		hover = t("Display Ancient Gateway Cooldown Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	},
 	{
 		name = "atrium_gate_destable",
-		label = "Ruins Reset",
-		hover = "Display Ruins Regeneration Time",
+		label = t("Ruins Reset"),
+		hover = t("Display Ruins Regeneration Time"),
 		options = {
-			{description = "Enabled", data = true},
-			{description = "Disabled", data = false},
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
 		},
 		default = true
 	}
