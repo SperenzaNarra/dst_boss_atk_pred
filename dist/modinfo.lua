@@ -220,6 +220,22 @@ local STRINGS = {
 		zh = "显示蟾蜍王生成时间",
 	},
 	{
+		en = "Nightmare Werepig",
+		zh = "梦魇疯猪",
+	},
+	{
+		en = "Display Nightmare Werepig Spawn Time",
+		zh = "显示梦魇疯猪生成时间",
+	},
+	{
+		en = "Scrappy Werepig",
+		zh = "拾荒疯猪",
+	},
+	{
+		en = "Display Scrappy Werepig Spawn Time",
+		zh = "显示拾荒疯猪生成时间",
+	},
+	{
 		en = "Gateway Cooldown",
 		zh = "远古大门的冷却",
 	},
@@ -616,11 +632,30 @@ configuration_options = {
 		},
 		default = true
 	},
-
 	{
 		name = "toadstool",
 		label = t("Toadstool"),
 		hover = t("Display Toadstool Spawn Time"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	{
+		name = "nightmare_werepig",
+		label = t("Nightmare Werepig"),
+		hover = t("Display Nightmare Werepig Spawn Time"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	{
+		name = "scrappy_werepig",
+		label = t("Scrappy Werepig"),
+		hover = t("Display Scrappy Werepig Spawn Time"),
 		options = {
 			{description = t("Enabled"), data = true},
 			{description = t("Disabled"), data = false},

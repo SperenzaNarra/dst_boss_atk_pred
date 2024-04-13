@@ -93,6 +93,38 @@ function bossconsole:GetTimeLeft(name)
 		if target.components.timer ~= nil and not target.components.timer:IsPaused(key) then
 			return target.components.timer:GetTimeLeft(key)
 		end
+	elseif name == "nightmare_werepig" or name == "scrappy_werepig" then
+		if not TUNING.SPAWN_DAYWALKER then
+			return nil
+		end
+
+		local spawner = target.components[key]
+		if spawner == nil then
+			return nil
+		end
+
+		local shard_spawner = TheWorld.shard.components.shard_daywalkerspawner
+		if shard_spawner ~= nil then
+			local location = shard_spawner:GetLocationName()
+			if name == "nightmare_werepig" and location ~= "cavejail" then
+				return nil
+			elseif name == "scrappy_werepig" and location ~= "forestjunkpile" then
+				return nil
+			end
+		end
+
+		if spawner.daywalker ~= nil or spawner.bigjunk ~= nil then
+			return nil
+		end
+
+		local days = spawner.days_to_spawn + 1 - TheWorld.state.time
+		if name == "scrappy_werepig" then
+			-- Edge case: Scrappy warepig allows early picking once
+			-- days_to_spawn == 0
+			days = days - 1
+		end
+
+		return days * TUNING.TOTAL_DAY_TIME
 	else
 		-- default
 		if target.components.worldsettingstimer ~= nil and not target.components.worldsettingstimer:IsPaused(key) then

@@ -15,6 +15,10 @@ local worldtimerkey = {
 	-- cave
 	atrium_gate_cooldown= "cooldown",
 	atrium_gate_destable= "destabilizing",
+
+	-- days_to_spawn
+	nightmare_werepig	= "daywalkerspawner",
+	scrappy_werepig		= "forestdaywalkerspawner",
 }
 
 local nametotag = {
@@ -31,6 +35,8 @@ local nametotag = {
 	klaus				= {cave=false,master=true, inst=false},
 	malbatross			= {cave=false,master=true, inst=false},
 	toadstool			= {cave=true, master=false,inst=false},
+	nightmare_werepig	= {cave=true, master=false,inst=false},
+	scrappy_werepig		= {cave=false, master=true,inst=false},
 }
 
 
@@ -48,6 +54,8 @@ local nametoattacktimefirst = {
 	klaus				= false,
 	malbatross			= false,
 	toadstool			= false,
+	nightmare_werepig	= false,
+	scrappy_werepig		= false,
 }
 
 local nametospawntimefirst = {
@@ -64,12 +72,14 @@ local nametospawntimefirst = {
 	klaus				= true,
 	malbatross			= true,
 	toadstool			= true,
+	nightmare_werepig	= true,
+	scrappy_werepig		= true,
 }
 
 local nametostring = {
 	antlion				= "Antlion",
-	atrium_gate_cooldown="Gate Cooldown",
-	atrium_gate_destable="Atrium Reset",
+	atrium_gate_cooldown= "Gate Cooldown",
+	atrium_gate_destable= "Atrium Reset",
 	bearger				= "Bearger",
 	beequeenhive		= "Bee Queen",
 	crabking_spawner	= "Crab King",
@@ -79,6 +89,8 @@ local nametostring = {
 	klaus				= "Klaus",
 	malbatross			= "Malbatross",
 	toadstool			= "Toadstool",
+	nightmare_werepig	= "Nightmare Werepig",
+	scrappy_werepig		= "Scrappy Werepig",
 }
 
 local nametoimage = {
@@ -97,6 +109,8 @@ local nametoimage = {
 	malbatross				= "../tex/malbatrosswidget.tex",
 	master					= "../tex/masterwidget.tex",
 	toadstool				= "../tex/toadstoolwidget.tex",
+	nightmare_werepig		= "../tex/nightmare_werepigwidget.tex",
+	scrappy_werepig			= "../tex/scrappy_werepigwidget.tex",
 }
 
 local nametoscript = {
@@ -115,6 +129,8 @@ local nametoscript = {
 	malbatross				= "images/script/malbatrosswidget.xml",
 	master					= "images/script/masterwidget.xml",
 	toadstool				= "images/script/toadstoolwidget.xml",
+	nightmare_werepig		= "images/script/nightmare_werepigwidget.xml",
+	scrappy_werepig			= "images/script/scrappy_werepigwidget.xml",
 }
 
 return {

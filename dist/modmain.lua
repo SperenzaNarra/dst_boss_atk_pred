@@ -33,6 +33,8 @@ Assets =
 	Asset("ATLAS", "images/script/malbatrosswidget.xml"),
 	Asset("ATLAS", "images/script/masterwidget.xml"),
 	Asset("ATLAS", "images/script/toadstoolwidget.xml"),
+	Asset("ATLAS", "images/script/nightmare_werepigwidget.xml"),
+	Asset("ATLAS", "images/script/scrappy_werepigwidget.xml"),
 
 	Asset("ATLAS", "images/script/lunar_rift_phase_0.xml"),
 	Asset("ATLAS", "images/script/lunar_rift_phase_1.xml"),
