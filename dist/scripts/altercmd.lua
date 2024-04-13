@@ -58,4 +58,8 @@ function alterconsole:getPosition(align, xPos, yPos, padding)
 	assert(false)
 end
 
+function alterconsole:resetPosition()
+	pos_counter = 0
+end
+
 return alterconsole

@@ -56,10 +56,8 @@ local altercmd = require "altercmd"
 local bossprioritytype = GetModConfigData("prioritytype")
 local showname = GetModConfigData("showname")
 
-
 -- hound
 AddClassPostConstruct("widgets/controls", function(hud)
-	print("Start to construct Hound Attack Predictor Widget")
 	if not GetModConfigData("houndenable") then return end
 
 	local width = widgetwidth
@@ -111,12 +109,10 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 		houndbar:SetLabel(text)
 	end)
-	print("Hound Attack Predictor Widget is constructed")
 end)
 
 -- bosses
 AddClassPostConstruct("widgets/controls", function(hud)
-	print("[boss attack predictor] Start to construct Bosses Attack Predictor Widget")
 	if not GetModConfigData("bossenable") then return end
 
 	local width = widgetwidth
@@ -125,11 +121,6 @@ AddClassPostConstruct("widgets/controls", function(hud)
 		GetModConfigData("widgetalign"),
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
-
-	print("[boss attack predictor] get widget width  " .. widgetwidth .. "px")
-	print("[boss attack predictor] get widget height " .. widgetheight .. "px")
-	print("[boss attack predictor] get widget xpos   " .. xPos .. "px")
-	print("[boss attack predictor] get widget ypos   " .. yPos .. "px")
 
 	local container = hud:AddChild(Widget("RPGMonsterInfoContainer"))
 	container:SetHAnchor(hAnchor)
@@ -220,12 +211,10 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 		bossesbar:SetLabel(text)
 	end)
-	print("Bosses Attack Predictor Widget is constructed")
 end)
 
 -- rift
 AddClassPostConstruct("widgets/controls", function(hud)
-	print("Start to construct Rift Predictor Widget")
 	if not GetModConfigData("riftenable") then return end
 
 	local width = widgetwidth
@@ -293,8 +282,14 @@ AddClassPostConstruct("widgets/controls", function(hud)
 		riftbar:SetTexture(affinity, currentPhase)
 		riftbar:SetLabel(text)
 	end)
-	print("Rift Predictor Widget is constructed")
 end)
+
+-- reset positions
+-- AddClassPostConstruct has guarenteed invocation order
+AddClassPostConstruct("widgets/controls", function(hud)
+	altercmd:resetPosition()
+end)
+
 
 -- for hounds
 AddPrefabPostInit("player_classified", function(inst)
