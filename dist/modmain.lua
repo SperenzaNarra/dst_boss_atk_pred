@@ -1,17 +1,21 @@
 KnownModIndex = GLOBAL.KnownModIndex
 local require = GLOBAL.require
 
+local function GetModConfigDataLocal(optionname)
+	return GetModConfigData(optionname, true)
+end
+
 local config =
 {
-	fontSize = GetModConfigData("fontsize")
+	fontSize = GetModConfigDataLocal("fontsize")
 }
 
-local widgetwidth = GetModConfigData("widgetwidth")
-local widgetheight = GetModConfigData("widgetheight")
+local widgetwidth = GetModConfigDataLocal("widgetwidth")
+local widgetheight = GetModConfigDataLocal("widgetheight")
 
-local widget_xPos = GetModConfigData("widget_xPos")
-local widget_yPos = GetModConfigData("widget_yPos")
-local widget_padding = GetModConfigData("widgetpadding")
+local widget_xPos = GetModConfigDataLocal("widget_xPos")
+local widget_yPos = GetModConfigDataLocal("widget_yPos")
+local widget_padding = GetModConfigDataLocal("widgetpadding")
 
 Assets =
 {
@@ -53,17 +57,17 @@ local RiftsWidget = require "widgets/riftswidget"
 local bosses = require "bosscmd"
 local altercmd = require "altercmd"
 
-local bossprioritytype = GetModConfigData("prioritytype")
-local showname = GetModConfigData("showname")
+local bossprioritytype = GetModConfigDataLocal("prioritytype")
+local showname = GetModConfigDataLocal("showname")
 
 -- hound
 AddClassPostConstruct("widgets/controls", function(hud)
-	if not GetModConfigData("houndenable") then return end
+	if not GetModConfigDataLocal("houndenable") then return end
 
 	local width = widgetwidth
 	local height = widgetheight
 	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigData("widgetalign"),
+		GetModConfigDataLocal("widgetalign"),
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
@@ -113,12 +117,12 @@ end)
 
 -- bosses
 AddClassPostConstruct("widgets/controls", function(hud)
-	if not GetModConfigData("bossenable") then return end
+	if not GetModConfigDataLocal("bossenable") then return end
 
 	local width = widgetwidth
 	local height = widgetheight
 	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigData("widgetalign"),
+		GetModConfigDataLocal("widgetalign"),
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
@@ -215,12 +219,12 @@ end)
 
 -- rift
 AddClassPostConstruct("widgets/controls", function(hud)
-	if not GetModConfigData("riftenable") then return end
+	if not GetModConfigDataLocal("riftenable") then return end
 
 	local width = widgetwidth
 	local height = widgetheight
 	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigData("widgetalign"),
+		GetModConfigDataLocal("widgetalign"),
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
@@ -364,7 +368,7 @@ local predict_constructor = function(inst, name, key, isinst)
 end
 
 for key, val in pairs(bosses:GetTimerKeyTable()) do
-	if GetModConfigData(key) then
+	if GetModConfigDataLocal(key) then
 		AddPrefabPostInit("player_classified", function(inst)predict_constructor(inst, key, val, bosses:IsInst(key)) end)
 	end
 end
