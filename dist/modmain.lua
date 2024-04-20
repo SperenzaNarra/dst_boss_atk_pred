@@ -142,7 +142,6 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	local nametoattacklast = nil
 
 	entity:DoPeriodicTask(0.5, function()
-
 		if GLOBAL.ThePlayer == nil then return end
 
 		local secondsToAttack 	= nil
@@ -151,8 +150,10 @@ AddClassPostConstruct("widgets/controls", function(hud)
 		local attackTimer = {}
 
 		for key, val in pairs(bosses:GetTimerKeyTable()) do
-			local target = key .. "_time_to_attack"
-			attackTimer[key] = GLOBAL.ThePlayer.player_classified[target]
+			if GetModConfigDataLocal(key) then
+				local target = key .. "_time_to_attack"
+				attackTimer[key] = GLOBAL.ThePlayer.player_classified[target]
+			end
 		end
 
 		local updatetimer = function(name, timer)
@@ -319,7 +320,6 @@ end)
 
 -- for bosses
 local predict_constructor = function(inst, name, key, isinst)
-
 	local time_to_attack = name .. "_time_to_attack"
 	local time_to_attack_dirty = time_to_attack .. "_dirty"
 	local net_time_to_attack = "net_" .. name .. "_time_to_attack"
@@ -368,9 +368,9 @@ local predict_constructor = function(inst, name, key, isinst)
 end
 
 for key, val in pairs(bosses:GetTimerKeyTable()) do
-	if GetModConfigDataLocal(key) then
-		AddPrefabPostInit("player_classified", function(inst)predict_constructor(inst, key, val, bosses:IsInst(key)) end)
-	end
+	AddPrefabPostInit("player_classified", function(inst)
+		predict_constructor(inst, key, val, bosses:IsInst(key))
+	end)
 end
 
 -- for rifts
