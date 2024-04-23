@@ -7,7 +7,7 @@ local function GetModConfigDataLocal(optionname)
 	-- generally where people expect mods to be configured, but reading local
 	-- client config when not hosting allows different player to customize
 	-- differently according to their own preferences.
-	local hosting = TheNet:GetIsHosting()
+	local hosting = GLOBAL.TheNet:GetIsHosting()
 	return GetModConfigData(optionname, not hosting)
 end
 
