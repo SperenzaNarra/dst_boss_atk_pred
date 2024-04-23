@@ -2,7 +2,13 @@ KnownModIndex = GLOBAL.KnownModIndex
 local require = GLOBAL.require
 
 local function GetModConfigDataLocal(optionname)
-	return GetModConfigData(optionname, true)
+	-- If the mod is run by the player hosting a game, use local server config
+	-- instead of local client config. This is because local server config is
+	-- generally where people expect mods to be configured, but reading local
+	-- client config when not hosting allows different player to customize
+	-- differently according to their own preferences.
+	local hosting = TheNet:GetIsHosting()
+	return GetModConfigData(optionname, not hosting)
 end
 
 local config =
