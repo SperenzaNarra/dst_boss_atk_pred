@@ -63,7 +63,7 @@ local RiftsWidget = require "widgets/riftswidget"
 local bosses = require "bosscmd"
 local bosses_table = require "tables/bosses"
 local altercmd = require "altercmd"
-local MODSTRINGS = require "../strings"
+local MODSTRINGS = require "modstrings"
 
 local bossprioritytype = GetModConfigDataLocal("prioritytype")
 local showname = GetModConfigDataLocal("showname")

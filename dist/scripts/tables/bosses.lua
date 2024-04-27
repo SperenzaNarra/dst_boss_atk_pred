@@ -1,4 +1,4 @@
-local MODSTRINGS = require "../strings"
+local MODSTRINGS = require "../modstrings"
 
 local worldtimerkey = {
 	bearger 	= "bearger_timetospawn",

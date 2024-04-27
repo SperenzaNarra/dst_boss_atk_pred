@@ -22,7 +22,7 @@ else
 end
 
 POT_GENERATION = true
-local MODSTRINGS = require "dist/scripts/strings"
+local MODSTRINGS = require "dist/scripts/modstrings"
 require "io"
 
 local path = "MODSTRINGS"
