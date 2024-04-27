@@ -63,6 +63,7 @@ local RiftsWidget = require "widgets/riftswidget"
 local bosses = require "bosscmd"
 local bosses_table = require "tables/bosses"
 local altercmd = require "altercmd"
+local MODSTRINGS = require "../strings"
 
 local bossprioritytype = GetModConfigDataLocal("prioritytype")
 local showname = GetModConfigDataLocal("showname")
@@ -95,26 +96,25 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 		local secondsToAttack = GLOBAL.ThePlayer.player_classified.hound_time_to_attack
 
-		local text = "No attack\npredicted!"
+		local text = MODSTRINGS.WIDGET.NO_HOUND
 
 		if secondsToAttack ~= nil then
 			if secondsToAttack < 0 then
-				text = "Attack!"
+				text = MODSTRINGS.WIDGET.HOUND_CURRENT
 			else
 				local ttAttack = math.floor(secondsToAttack)
 				local minutes = math.floor(ttAttack / 60)
 				local seconds = ttAttack - (minutes * 60)
 
 				if minutes == 0 then
-					sAttack = seconds.." seconds"
+					sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
 				else
-					if seconds <= 9 then
-						seconds = "0"..seconds
-					end
-					sAttack = minutes.."m "..seconds
+					sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 				end
 
-				text = string.format("%s\n%.2f days", sAttack, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+				local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+
+				text = sAttack .. "\n" .. ttDays
 			end
 		end
 
@@ -153,7 +153,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 
 		local secondsToAttack 	= nil
 		local nametoattack 		= nil
-		local text = "No Boss\nPredicted"
+		local text = MODSTRINGS.WIDGET.NO_BOSS
 		local attackTimer = {}
 
 		for key, val in pairs(bosses_table.worldtimerkey) do
@@ -194,21 +194,21 @@ AddClassPostConstruct("widgets/controls", function(hud)
 			local seconds = ttAttack - (minutes * 60)
 
 			if minutes == 0 then
-				sAttack = seconds.." seconds"
+				sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
 			else
-				if seconds <= 9 then
-					seconds = "0"..seconds
-				end
-				sAttack = minutes.."m "..seconds
+				sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 			end
+
+			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+
+			text = sAttack .. "\n" .. ttDays
+			if showname then
+				text = bosses_table.nametostring[nametoattack] .. "\n" .. text
+			end
+
 			if nametoattacklast ~= nametoattack then
 				bossesbar:SetTexture(bosses_table.nametoscript[nametoattack], bosses_table.nametoimage[nametoattack])
 				nametoattacklast = nametoattack
-			end
-			if showname then
-				text = string.format("%s\n%s\n%.2f days", bosses_table.nametostring[nametoattack], sAttack, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
-			else
-				text = string.format("%s\n%.2f days",  sAttack, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
 			end
 		else
 			if nametoattacklast ~= nil then
@@ -259,7 +259,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 			affinity = "shadow"
 		end
 
-		local text = "No rifts\npredicted!"
+		local text = MODSTRINGS.WIDGET.NO_RIFT
 
 		if secondsToNextPhase ~= nil then
 			local ttAttack = math.floor(secondsToNextPhase)
@@ -267,28 +267,28 @@ AddClassPostConstruct("widgets/controls", function(hud)
 			local seconds = ttAttack - (minutes * 60)
 
 			if minutes == 0 then
-				sAttack = seconds.." seconds"
+				sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
 			else
-				if seconds <= 9 then
-					seconds = "0"..seconds
-				end
-				sAttack = minutes.."m "..seconds
+				sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 			end
 
-			local sTimeplus = ""
+			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+
+			text = sAttack .. "\n" .. ttDays
+
 			if GLOBAL.ThePlayer.player_classified.rift_time_plus then
-				sTimeplus = "+"
+				text = sAttack .. "+\n" .. ttDays .. "+"
+			else
+				text = sAttack .. "\n" .. ttDays
 			end
 
 			local sWave = ""
 			local waveleft = GLOBAL.ThePlayer.player_classified.rift_wave_left
 			if waveleft ~= nil then
-				sWave = string.format("%d wave%s left\n", waveleft, waveleft ~= 1 and "s" or "")
+				text = string.format(MODSTRINGS.WIDGET.RIFT_WAVE_LEFT, waveleft) .. "\n" .. text
 			end
-
-			text = string.format("%s%s%s\n%.2f%s days", sWave, sAttack, sTimeplus, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME, sTimeplus)
 		elseif currentPhase ~= 0 then
-			text = "Expanding!"
+			text = MODSTRINGS.WIDGET.RIFT_EXPANDING
 		end
 
 		riftbar:SetTexture(affinity, currentPhase)

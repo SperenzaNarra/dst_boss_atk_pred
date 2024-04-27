@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Application: Dont' Starve\n"
+"POT Version: 2.0\n"
+"X-Generator: Poedit 2.3.1\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. MODSTRINGS.BOSSES.ATRIUM_GATE_COOLDOWN
+msgctxt "MODSTRINGS.BOSSES.ATRIUM_GATE_COOLDOWN"
+msgid "Gate Cooldown"
+msgstr "大门冷却"
+
+#. MODSTRINGS.BOSSES.ATRIUM_GATE_DESTABLE
+msgctxt "MODSTRINGS.BOSSES.ATRIUM_GATE_DESTABLE"
+msgid "Atrium Reset"
+msgstr "遗迹重制"
+
+#. MODSTRINGS.BOSSES.FRUITFLY
+msgctxt "MODSTRINGS.BOSSES.FRUITFLY"
+msgid "Fruitfly"
+msgstr "果蝇"
+
+#. MODSTRINGS.WIDGET.DAYS_LEFT
+msgctxt "MODSTRINGS.WIDGET.DAYS_LEFT"
+msgid "%.2f days"
+msgstr "%.2f 天"
+
+#. MODSTRINGS.WIDGET.HOUND_CURRENT
+msgctxt "MODSTRINGS.WIDGET.HOUND_CURRENT"
+msgid "Attack!"
+msgstr "袭击！"
+
+#. MODSTRINGS.WIDGET.MIN_SEC_LEFT
+msgctxt "MODSTRINGS.WIDGET.MIN_SEC_LEFT"
+msgid "%dm %02d"
+msgstr "%d 分 %02d 秒"
+
+#. MODSTRINGS.WIDGET.NO_BOSS
+msgctxt "MODSTRINGS.WIDGET.NO_BOSS"
+msgid ""
+"No Boss\n"
+"Predicted"
+msgstr "未侦测 Boss"
+
+#. MODSTRINGS.WIDGET.NO_HOUND
+msgctxt "MODSTRINGS.WIDGET.NO_HOUND"
+msgid ""
+"No Attack\n"
+"Predicted"
+msgstr "未侦测袭击"
+
+#. MODSTRINGS.WIDGET.NO_RIFT
+msgctxt "MODSTRINGS.WIDGET.NO_RIFT"
+msgid ""
+"No Rift\n"
+"Predicted"
+msgstr "未侦测裂隙"
+
+#. MODSTRINGS.WIDGET.RIFT_EXPANDING
+msgctxt "MODSTRINGS.WIDGET.RIFT_EXPANDING"
+msgid "Expanding!"
+msgstr "扩张！"
+
+#. MODSTRINGS.WIDGET.RIFT_WAVE_LEFT
+msgctxt "MODSTRINGS.WIDGET.RIFT_WAVE_LEFT"
+msgid "%d waves left"
+msgstr "剩余 %d 波"
+
+#. MODSTRINGS.WIDGET.SEC_LEFT
+msgctxt "MODSTRINGS.WIDGET.SEC_LEFT"
+msgid "%d seconds"
+msgstr "%d 秒"

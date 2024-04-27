@@ -1,3 +1,4 @@
+local bosses = require "tables/bosses"
 local altercmd = require "altercmd"
 
 local bossconsole = {}

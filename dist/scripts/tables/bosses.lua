@@ -1,3 +1,5 @@
+local MODSTRINGS = require "../strings"
+
 local worldtimerkey = {
 	bearger 	= "bearger_timetospawn",
 	deerclops 	= "deerclops_timetoattack",
@@ -77,20 +79,20 @@ local nametospawntimefirst = {
 }
 
 local nametostring = {
-	antlion				= "Antlion",
-	atrium_gate_cooldown= "Gate Cooldown",
-	atrium_gate_destable= "Atrium Reset",
-	bearger				= "Bearger",
-	beequeenhive		= "Bee Queen",
-	crabking_spawner	= "Crab King",
-	deerclops			= "Deerclops",
-	dragonfly_spawner	= "Dragonfly",
-	fruitfly			= "Fruitfly",
-	klaus				= "Klaus",
-	malbatross			= "Malbatross",
-	toadstool			= "Toadstool",
-	nightmare_werepig	= "Nightmare Werepig",
-	scrappy_werepig		= "Scrappy Werepig",
+	antlion				= STRINGS.NAMES.ANTLION,
+	atrium_gate_cooldown= MODSTRINGS.BOSSES.ATRIUM_GATE_COOLDOWN,
+	atrium_gate_destable= MODSTRINGS.BOSSES.ATRIUM_GATE_DESTABLE,
+	bearger				= STRINGS.NAMES.BEARGER,
+	beequeenhive		= STRINGS.NAMES.BEEQUEEN,
+	crabking_spawner	= STRINGS.NAMES.CRABKING,
+	deerclops			= STRINGS.NAMES.DEERCLOPS,
+	dragonfly_spawner	= STRINGS.NAMES.DRAGONFLY,
+	fruitfly			= MODSTRINGS.BOSSES.FRUITFLY,
+	klaus				= STRINGS.NAMES.KLAUS,
+	malbatross			= STRINGS.NAMES.MALBATROSS,
+	toadstool			= STRINGS.NAMES.TOADSTOOL,
+	nightmare_werepig	= STRINGS.NAMES.DAYWALKER,
+	scrappy_werepig		= STRINGS.NAMES.DAYWALKER2,
 }
 
 local nametoimage = {

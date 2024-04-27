@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Application: Boss Attack Predictor\n"
+"POT Version: 2.0\n"
+
+#. MODSTRINGS.BOSSES.ATRIUM_GATE_COOLDOWN
+msgctxt "MODSTRINGS.BOSSES.ATRIUM_GATE_COOLDOWN"
+msgid "Gate Cooldown"
+msgstr ""
+
+#. MODSTRINGS.BOSSES.ATRIUM_GATE_DESTABLE
+msgctxt "MODSTRINGS.BOSSES.ATRIUM_GATE_DESTABLE"
+msgid "Atrium Reset"
+msgstr ""
+
+#. MODSTRINGS.BOSSES.FRUITFLY
+msgctxt "MODSTRINGS.BOSSES.FRUITFLY"
+msgid "Fruitfly"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.DAYS_LEFT
+msgctxt "MODSTRINGS.WIDGET.DAYS_LEFT"
+msgid "%.2f days"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.HOUND_CURRENT
+msgctxt "MODSTRINGS.WIDGET.HOUND_CURRENT"
+msgid "Attack!"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.MIN_SEC_LEFT
+msgctxt "MODSTRINGS.WIDGET.MIN_SEC_LEFT"
+msgid "%dm %02d"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.NO_BOSS
+msgctxt "MODSTRINGS.WIDGET.NO_BOSS"
+msgid "No Boss\nPredicted"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.NO_HOUND
+msgctxt "MODSTRINGS.WIDGET.NO_HOUND"
+msgid "No Attack\nPredicted"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.NO_RIFT
+msgctxt "MODSTRINGS.WIDGET.NO_RIFT"
+msgid "No Rift\nPredicted"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.RIFT_EXPANDING
+msgctxt "MODSTRINGS.WIDGET.RIFT_EXPANDING"
+msgid "Expanding!"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.RIFT_WAVE_LEFT
+msgctxt "MODSTRINGS.WIDGET.RIFT_WAVE_LEFT"
+msgid "%d waves left"
+msgstr ""
+
+#. MODSTRINGS.WIDGET.SEC_LEFT
+msgctxt "MODSTRINGS.WIDGET.SEC_LEFT"
+msgid "%d seconds"
+msgstr ""
+
