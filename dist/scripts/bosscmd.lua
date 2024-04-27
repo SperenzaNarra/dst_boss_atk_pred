@@ -1,52 +1,7 @@
-local bosses = require "tables/bosses"
 local altercmd = require "altercmd"
 
 local bossconsole = {}
 local bosscache = {}
-
-function bossconsole:GetTimerKeyTable()
-	return bosses.worldtimerkey
-end
-
-function bossconsole:GetTimerKey(name)
-	return bosses.worldtimerkey[name]
-end
-
-function bossconsole:GetTags(name)
-	return bosses.nametotag[name]
-end
-
-function bossconsole:IsCave(name)
-	return bosses.bosses.nametotag[name].cave
-end
-
-function bossconsole:IsMaster(name)
-	return bosses.nametotag[name].master
-end
-
-function bossconsole:IsInst(name)
-	return bosses.nametotag[name].inst
-end
-
-function bossconsole:ToString(name)
-	return bosses.nametostring[name]
-end
-
-function bossconsole:GetImage(name)
-	return bosses.nametoimage[name]
-end
-
-function bossconsole:GetScript(name)
-	return bosses.nametoscript[name]
-end
-
-function bossconsole:GetAttackPriority(name)
-	return bosses.nametoattacktimefirst[name]
-end
-
-function bossconsole:GetSpawnPriority(name)
-	return bosses.nametospawntimefirst[name]
-end
 
 function bossconsole:FindBossEntity(name)
 	if bosses.nametotag[name].inst then
@@ -134,9 +89,5 @@ function bossconsole:GetTimeLeft(name)
 
 	return nil
 end
-
-
-
-
 
 return bossconsole

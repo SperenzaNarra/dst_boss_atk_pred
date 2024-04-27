@@ -61,6 +61,7 @@ local HoundsWidget = require "widgets/houndswidget"
 local BossesWidget = require "widgets/bosseswidget"
 local RiftsWidget = require "widgets/riftswidget"
 local bosses = require "bosscmd"
+local bosses_table = require "tables/bosses"
 local altercmd = require "altercmd"
 
 local bossprioritytype = GetModConfigDataLocal("prioritytype")
@@ -144,7 +145,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	bossesbar:Show()
 
 	local entity = GLOBAL.CreateEntity()
-	local timerkeytable = bosses:GetTimerKeyTable()
+	local timerkeytable = bosses_table.worldtimerkey
 	local nametoattacklast = nil
 
 	entity:DoPeriodicTask(0.5, function()
@@ -155,7 +156,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 		local text = "No Boss\nPredicted"
 		local attackTimer = {}
 
-		for key, val in pairs(bosses:GetTimerKeyTable()) do
+		for key, val in pairs(bosses_table.worldtimerkey) do
 			if GetModConfigDataLocal(key) then
 				local target = key .. "_time_to_attack"
 				attackTimer[key] = GLOBAL.ThePlayer.player_classified[target]
@@ -175,13 +176,13 @@ AddClassPostConstruct("widgets/controls", function(hud)
 			end
 
 			if bossprioritytype == "attacktimefirst" then
-				if nametoattack == nil or (not bosses:GetAttackPriority(nametoattack)) or bosses:GetAttackPriority(name) then
+				if nametoattack == nil or (not bosses_table.nametoattacktimefirst[nametoattack]) or bosses_table.nametoattacktimefirst[name] then
 					updatetimer(name, timer)
 				end
 			end
 
 			if bossprioritytype == "spawntimefirst" then
-				if nametoattack == nil or (not bosses:GetSpawnPriority(nametoattack)) or bosses:GetSpawnPriority(name) then
+				if nametoattack == nil or (not bosses_table.nametospawntimefirst[nametoattack]) or bosses_table.nametospawntimefirst[name] then
 					updatetimer(name, timer)
 				end
 			end
@@ -201,11 +202,11 @@ AddClassPostConstruct("widgets/controls", function(hud)
 				sAttack = minutes.."m "..seconds
 			end
 			if nametoattacklast ~= nametoattack then
-				bossesbar:SetTexture(bosses:GetScript(nametoattack), bosses:GetImage(nametoattack))
+				bossesbar:SetTexture(bosses_table.nametoscript[nametoattack], bosses_table.nametoimage[nametoattack])
 				nametoattacklast = nametoattack
 			end
 			if showname then
-				text = string.format("%s\n%s\n%.2f days", bosses:ToString(nametoattack), sAttack, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+				text = string.format("%s\n%s\n%.2f days", bosses_table.nametostring[nametoattack], sAttack, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
 			else
 				text = string.format("%s\n%.2f days",  sAttack, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
 			end
@@ -373,9 +374,9 @@ local predict_constructor = function(inst, name, key, isinst)
 	end)
 end
 
-for key, val in pairs(bosses:GetTimerKeyTable()) do
+for key, val in pairs(bosses_table.worldtimerkey) do
 	AddPrefabPostInit("player_classified", function(inst)
-		predict_constructor(inst, key, val, bosses:IsInst(key))
+		predict_constructor(inst, key, val, bosses_table.nametotag[key].inst)
 	end)
 end
 
