@@ -2,12 +2,6 @@ local Image = require "widgets/image"
 local Text = require "widgets/text"
 local Widget = require "widgets/widget"
 
-Assets =
-{
-	Asset("ATLAS", "images/houndswidget.xml"),
-	Asset("ATLAS", "images/depthwormswidget.xml"),
-}
-
 local HoundsWidget = Class(Widget, function(self, userConfig, width, height, owner)
 	Widget._ctor(self, "HoundsWidget")
 

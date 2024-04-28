@@ -1,3 +1,6 @@
+local env = env
+GLOBAL.setfenv(1, GLOBAL)
+
 local alterconsole = {}
 
 local lastfound = -1

@@ -1,5 +1,28 @@
-KnownModIndex = GLOBAL.KnownModIndex
-local require = GLOBAL.require
+local env = env
+GLOBAL.setfenv(1, GLOBAL)
+
+-- based on modimport, but cache results and actually return the result
+local importcache = {}
+env.import = function(modulename)
+	modulename = "main/"..modulename..".lua"
+	if importcache[modulename] ~= nil then
+		return importcache[modulename].result
+	end
+
+	print("import: "..env.MODROOT..modulename)
+	local result = kleiloadlua(env.MODROOT..modulename)
+	if result == nil then
+		error("Error in import: "..modulename.." not found!")
+	elseif type(result) == "string" then
+		error("Error in import: "..ModInfoname(modname).." importing "..modulename.."!\n"..result)
+	else
+		setfenv(result, env)
+		result = result()
+	end
+
+	importcache[modulename] = { result = result }
+	return result
+end
 
 local function GetModConfigDataLocal(optionname)
 	-- If the mod is run by the player hosting a game, use local server config
@@ -7,8 +30,8 @@ local function GetModConfigDataLocal(optionname)
 	-- generally where people expect mods to be configured, but reading local
 	-- client config when not hosting allows different player to customize
 	-- differently according to their own preferences.
-	local hosting = GLOBAL.TheNet:GetIsHosting()
-	return GetModConfigData(optionname, not hosting)
+	local hosting = TheNet:GetIsHosting()
+	return env.GetModConfigData(optionname, not hosting)
 end
 
 local config =
@@ -23,7 +46,7 @@ local widget_xPos = GetModConfigDataLocal("widget_xPos")
 local widget_yPos = GetModConfigDataLocal("widget_yPos")
 local widget_padding = GetModConfigDataLocal("widgetpadding")
 
-Assets =
+env.Assets =
 {
 	Asset("ATLAS", "images/houndswidget.xml"),
 	Asset("ATLAS", "images/depthwormswidget.xml"),
@@ -60,16 +83,16 @@ local Widget = require "widgets/widget"
 local HoundsWidget = require "widgets/houndswidget"
 local BossesWidget = require "widgets/bosseswidget"
 local RiftsWidget = require "widgets/riftswidget"
-local bosses = require "bosscmd"
-local bosses_table = require "tables/bosses"
-local altercmd = require "altercmd"
-local MODSTRINGS = require "modstrings"
+local bosses = env.import "bosscmd"
+local bosses_table = env.import "tables/bosses"
+local altercmd = env.import "altercmd"
+local MODSTRINGS = env.import "strings"
 
 local bossprioritytype = GetModConfigDataLocal("prioritytype")
 local showname = GetModConfigDataLocal("showname")
 
 -- hound
-AddClassPostConstruct("widgets/controls", function(hud)
+env.AddClassPostConstruct("widgets/controls", function(hud)
 	if not GetModConfigDataLocal("houndenable") then return end
 
 	local width = widgetwidth
@@ -84,17 +107,17 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
 	container:SetClickable(false)
-	container:SetScaleMode(GLOBAL.SCALEMODE_PROPORTIONAL)
+	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 	local houndbar = container:AddChild(HoundsWidget(config, width, height, container))
 
 	houndbar:Show()
 
-	local entity = GLOBAL.CreateEntity()
+	local entity = CreateEntity()
 	entity:DoPeriodicTask(0.5, function()
-		if GLOBAL.ThePlayer == nil then return end
+		if ThePlayer == nil then return end
 
-		local secondsToAttack = GLOBAL.ThePlayer.player_classified.hound_time_to_attack
+		local secondsToAttack = ThePlayer.player_classified.hound_time_to_attack
 
 		local text = MODSTRINGS.WIDGET.NO_HOUND
 
@@ -102,6 +125,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 			if secondsToAttack < 0 then
 				text = MODSTRINGS.WIDGET.HOUND_CURRENT
 			else
+				local sAttack
 				local ttAttack = math.floor(secondsToAttack)
 				local minutes = math.floor(ttAttack / 60)
 				local seconds = ttAttack - (minutes * 60)
@@ -112,7 +136,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 					sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 				end
 
-				local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+				local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
 
 				text = sAttack .. "\n" .. ttDays
 			end
@@ -123,7 +147,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 end)
 
 -- bosses
-AddClassPostConstruct("widgets/controls", function(hud)
+env.AddClassPostConstruct("widgets/controls", function(hud)
 	if not GetModConfigDataLocal("bossenable") then return end
 
 	local width = widgetwidth
@@ -138,18 +162,18 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
 	container:SetClickable(false)
-	container:SetScaleMode(GLOBAL.SCALEMODE_PROPORTIONAL)
+	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 	local bossesbar = container:AddChild(BossesWidget(config, width, height, container))
 
 	bossesbar:Show()
 
-	local entity = GLOBAL.CreateEntity()
+	local entity = CreateEntity()
 	local timerkeytable = bosses_table.worldtimerkey
 	local nametoattacklast = nil
 
 	entity:DoPeriodicTask(0.5, function()
-		if GLOBAL.ThePlayer == nil then return end
+		if ThePlayer == nil then return end
 
 		local secondsToAttack 	= nil
 		local nametoattack 		= nil
@@ -159,7 +183,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 		for key, val in pairs(bosses_table.worldtimerkey) do
 			if GetModConfigDataLocal(key) then
 				local target = key .. "_time_to_attack"
-				attackTimer[key] = GLOBAL.ThePlayer.player_classified[target]
+				attackTimer[key] = ThePlayer.player_classified[target]
 			end
 		end
 
@@ -189,6 +213,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 		end
 
 		if secondsToAttack ~= nil then
+			local sAttack
 			local ttAttack = math.floor(secondsToAttack)
 			local minutes = math.floor(ttAttack / 60)
 			local seconds = ttAttack - (minutes * 60)
@@ -199,7 +224,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 				sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 			end
 
-			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
 
 			text = sAttack .. "\n" .. ttDays
 			if showname then
@@ -212,7 +237,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 			end
 		else
 			if nametoattacklast ~= nil then
-				if GLOBAL.TheWorld:HasTag("cave") then
+				if TheWorld:HasTag("cave") then
 					bossesbar:SetTextureDefaultCave()
 				else
 					bossesbar:SetTextureDefaultMaster()
@@ -226,7 +251,7 @@ AddClassPostConstruct("widgets/controls", function(hud)
 end)
 
 -- rift
-AddClassPostConstruct("widgets/controls", function(hud)
+env.AddClassPostConstruct("widgets/controls", function(hud)
 	if not GetModConfigDataLocal("riftenable") then return end
 
 	local width = widgetwidth
@@ -241,27 +266,28 @@ AddClassPostConstruct("widgets/controls", function(hud)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
 	container:SetClickable(false)
-	container:SetScaleMode(GLOBAL.SCALEMODE_PROPORTIONAL)
+	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 	local riftbar = container:AddChild(RiftsWidget(config, width, height, container))
 
 	riftbar:Show()
 
-	local entity = GLOBAL.CreateEntity()
+	local entity = CreateEntity()
 	entity:DoPeriodicTask(0.5, function()
-		if GLOBAL.ThePlayer == nil then return end
+		if ThePlayer == nil then return end
 
-		local secondsToNextPhase = GLOBAL.ThePlayer.player_classified.rift_time_to_next_phase
-		local currentPhase = GLOBAL.ThePlayer.player_classified.rift_current_phase
+		local secondsToNextPhase = ThePlayer.player_classified.rift_time_to_next_phase
+		local currentPhase = ThePlayer.player_classified.rift_current_phase
 
 		local affinity = "lunar"
-		if GLOBAL.TheWorld:HasTag("cave") then
+		if TheWorld:HasTag("cave") then
 			affinity = "shadow"
 		end
 
 		local text = MODSTRINGS.WIDGET.NO_RIFT
 
 		if secondsToNextPhase ~= nil then
+			local sAttack
 			local ttAttack = math.floor(secondsToNextPhase)
 			local minutes = math.floor(ttAttack / 60)
 			local seconds = ttAttack - (minutes * 60)
@@ -272,18 +298,18 @@ AddClassPostConstruct("widgets/controls", function(hud)
 				sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 			end
 
-			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / GLOBAL.TUNING.TOTAL_DAY_TIME)
+			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
 
 			text = sAttack .. "\n" .. ttDays
 
-			if GLOBAL.ThePlayer.player_classified.rift_time_plus then
+			if ThePlayer.player_classified.rift_time_plus then
 				text = sAttack .. "+\n" .. ttDays .. "+"
 			else
 				text = sAttack .. "\n" .. ttDays
 			end
 
 			local sWave = ""
-			local waveleft = GLOBAL.ThePlayer.player_classified.rift_wave_left
+			local waveleft = ThePlayer.player_classified.rift_wave_left
 			if waveleft ~= nil then
 				text = string.format(MODSTRINGS.WIDGET.RIFT_WAVE_LEFT, waveleft) .. "\n" .. text
 			end
@@ -298,29 +324,29 @@ end)
 
 -- reset positions
 -- AddClassPostConstruct has guarenteed invocation order
-AddClassPostConstruct("widgets/controls", function(hud)
+env.AddClassPostConstruct("widgets/controls", function(hud)
 	altercmd:resetPosition()
 end)
 
 
 -- for hounds
-AddPrefabPostInit("player_classified", function(inst)
+env.AddPrefabPostInit("player_classified", function(inst)
 	inst.hound_time_to_attack = nil
-	inst.net_hound_time_to_attack = GLOBAL.net_int(inst.GUID, "hound_time_to_attack", "hound_time_to_attack_dirty")
+	inst.net_hound_time_to_attack = net_int(inst.GUID, "hound_time_to_attack", "hound_time_to_attack_dirty")
 
-	if not GLOBAL.TheNet:IsDedicated() then
+	if not TheNet:IsDedicated() then
 		inst:ListenForEvent("hound_time_to_attack_dirty", function(inst)
 			inst.hound_time_to_attack = inst.net_hound_time_to_attack:value()
 		end)
 	end
 
-	if not GLOBAL.TheWorld.ismastersim then
+	if not TheWorld.ismastersim then
 		return
 	end
 
-	if GLOBAL.TheWorld.components.hounded ~= nil then
+	if TheWorld.components.hounded ~= nil then
 		inst:DoPeriodicTask(0.5, function()
-			inst.net_hound_time_to_attack:set(GLOBAL.TheWorld.components.hounded:GetTimeToAttack())
+			inst.net_hound_time_to_attack:set(TheWorld.components.hounded:GetTimeToAttack())
 		end)
 	end
 end)
@@ -332,10 +358,10 @@ local predict_constructor = function(inst, name, key, isinst)
 	local net_time_to_attack = "net_" .. name .. "_time_to_attack"
 
 	inst[time_to_attack] = nil
-	inst[net_time_to_attack] = GLOBAL.net_int(inst.GUID, time_to_attack, time_to_attack_dirty)
+	inst[net_time_to_attack] = net_int(inst.GUID, time_to_attack, time_to_attack_dirty)
 
 	-- client
-	if not GLOBAL.TheNet:IsDedicated() then
+	if not TheNet:IsDedicated() then
 		inst:ListenForEvent(time_to_attack_dirty, function(inst)
 			local timeleft = inst[net_time_to_attack]:value()
 			if timeleft == nil or timeleft < 0 then
@@ -346,7 +372,7 @@ local predict_constructor = function(inst, name, key, isinst)
 		end)
 	end
 
-	if not GLOBAL.TheWorld.ismastersim then
+	if not TheWorld.ismastersim then
 		return
 	end
 
@@ -375,23 +401,23 @@ local predict_constructor = function(inst, name, key, isinst)
 end
 
 for key, val in pairs(bosses_table.worldtimerkey) do
-	AddPrefabPostInit("player_classified", function(inst)
+	env.AddPrefabPostInit("player_classified", function(inst)
 		predict_constructor(inst, key, val, bosses_table.nametotag[key].inst)
 	end)
 end
 
 -- for rifts
-AddPrefabPostInit("player_classified", function(inst)
+env.AddPrefabPostInit("player_classified", function(inst)
 	inst.rift_time_to_next_phase = nil
-	inst.net_rift_time_to_next_phase = GLOBAL.net_int(inst.GUID, "rift_time_to_next_phase", "rift_time_to_next_phase_dirty")
+	inst.net_rift_time_to_next_phase = net_int(inst.GUID, "rift_time_to_next_phase", "rift_time_to_next_phase_dirty")
 	inst.rift_time_plus = nil
-	inst.net_rift_time_plus = GLOBAL.net_bool(inst.GUID, "rift_time_plus", "rift_time_plus_dirty")
+	inst.net_rift_time_plus = net_bool(inst.GUID, "rift_time_plus", "rift_time_plus_dirty")
 	inst.rift_current_phase = 0
-	inst.net_rift_current_phase = GLOBAL.net_int(inst.GUID, "rift_current_phase", "rift_current_phase_dirty")
+	inst.net_rift_current_phase = net_int(inst.GUID, "rift_current_phase", "rift_current_phase_dirty")
 	inst.rift_wave_left = nil
-	inst.net_rift_wave_left = GLOBAL.net_int(inst.GUID, "rift_wave_left", "rift_wave_left_dirty")
+	inst.net_rift_wave_left = net_int(inst.GUID, "rift_wave_left", "rift_wave_left_dirty")
 
-	if not GLOBAL.TheNet:IsDedicated() then
+	if not TheNet:IsDedicated() then
 		inst:ListenForEvent("rift_time_to_next_phase_dirty", function(inst)
 			local timeleft = inst.net_rift_time_to_next_phase:value()
 			if timeleft == nil or timeleft < 0 then
@@ -416,17 +442,17 @@ AddPrefabPostInit("player_classified", function(inst)
 		end)
 	end
 
-	if not GLOBAL.TheWorld.ismastersim then
+	if not TheWorld.ismastersim then
 		return
 	end
 
 	local RIFTSPAWN_TIMERNAME = "rift_spawn_timer"
-	local worldsettingstimer = GLOBAL.TheWorld.components.worldsettingstimer
+	local worldsettingstimer = TheWorld.components.worldsettingstimer
 	local timeleft = nil
 
-	if GLOBAL.TheWorld.components.riftspawner ~= nil then
+	if TheWorld.components.riftspawner ~= nil then
 		inst:DoPeriodicTask(0.5, function()
-			local rifts = GLOBAL.TheWorld.components.riftspawner:GetRifts()
+			local rifts = TheWorld.components.riftspawner:GetRifts()
 
 			for rift, rift_prefab in pairs(rifts) do
 				inst.net_rift_current_phase:set(rift._stage)
@@ -441,7 +467,7 @@ AddPrefabPostInit("player_classified", function(inst)
 				if timeleft == nil then
 					timeleft = -1
 
-					local plantspawner = GLOBAL.TheWorld.components.lunarthrall_plantspawner
+					local plantspawner = TheWorld.components.lunarthrall_plantspawner
 					if plantspawner ~= nil then
 						waveleft = plantspawner.waves_to_release
 					end
@@ -449,10 +475,10 @@ AddPrefabPostInit("player_classified", function(inst)
 						waveleft = -1
 					elseif waveleft > 0 then
 						if plantspawner._nextspawn ~= nil then
-							timeleft = GLOBAL.GetTaskRemaining(plantspawner._nextspawn)
+							timeleft = GetTaskRemaining(plantspawner._nextspawn)
 						end
 						if timeleft < 0 and plantspawner._spawntask ~= nil then
-							timeleft = GLOBAL.GetTaskRemaining(plantspawner._spawntask)
+							timeleft = GetTaskRemaining(plantspawner._spawntask)
 							timeplus = true
 						end
 					end

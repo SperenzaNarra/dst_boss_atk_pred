@@ -22,7 +22,7 @@ else
 end
 
 POT_GENERATION = true
-local MODSTRINGS = require "dist/scripts/modstrings"
+local MODSTRINGS = require "dist/main/strings"
 require "io"
 
 local path = "MODSTRINGS"
@@ -307,7 +307,7 @@ end
 	--CreateStringsPOTv1("data\\scripts\\languages\\strings_v1.pot", "MODSTRINGS", MODSTRINGS)
 
 	--Create POT file for STRINGS table in new v2 format
-	CreateStringsPOTv2("dist/bap_languages/strings.pot", "MODSTRINGS", MODSTRINGS)
+	CreateStringsPOTv2("dist/modlanguages/strings.pot", "MODSTRINGS", MODSTRINGS)
 
 	--Create english.po file for new translations (or just copy the pot file create above, not sure how from lua)
 	--CreateStringsPOTv2("languages\\english.po", "MODSTRINGS", MODSTRINGS)

@@ -17,12 +17,15 @@ local MODSTRINGS = {
 	}
 }
 
-if POT_GENERATION == false then
+if GLOBAL ~= nil and GLOBAL.POT_GENERATION == false then
+	local env = env
+	GLOBAL.setfenv(1, GLOBAL)
+
 	local modtranslator = Translator()
 
 	local currentLocale = LOC.GetLocale()
 	if currentLocale ~= nil then
-		local file = "bap_languages/" .. currentLocale.strings
+		local file = env.MODROOT .. "modlanguages/" .. currentLocale.strings
 		if resolvefilepath_soft(file) then
 			modtranslator:LoadPOFile(file, currentLocale.code)
 		end

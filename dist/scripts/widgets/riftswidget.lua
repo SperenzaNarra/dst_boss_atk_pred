@@ -2,18 +2,6 @@ local Image = require "widgets/image"
 local Text = require "widgets/text"
 local Widget = require "widgets/widget"
 
-Assets =
-{
-	Asset("ATLAS", "images/script/lunar_rift_phase_0.xml"),
-	Asset("ATLAS", "images/script/lunar_rift_phase_1.xml"),
-	Asset("ATLAS", "images/script/lunar_rift_phase_2.xml"),
-	Asset("ATLAS", "images/script/lunar_rift_phase_3.xml"),
-	Asset("ATLAS", "images/script/shadow_rift_phase_0.xml"),
-	Asset("ATLAS", "images/script/shadow_rift_phase_1.xml"),
-	Asset("ATLAS", "images/script/shadow_rift_phase_2.xml"),
-	Asset("ATLAS", "images/script/shadow_rift_phase_3.xml"),
-}
-
 local RiftsWidget = Class(Widget, function(self, userConfig, width, height, owner)
 	Widget._ctor(self, "RiftsWidget")
 

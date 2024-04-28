@@ -1,5 +1,8 @@
-local bosses = require "tables/bosses"
-local altercmd = require "altercmd"
+local env = env
+GLOBAL.setfenv(1, GLOBAL)
+
+local bosses = env.import "tables/bosses"
+local altercmd = env.import "altercmd"
 
 local bossconsole = {}
 local bosscache = {}

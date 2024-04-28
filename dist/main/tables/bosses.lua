@@ -1,4 +1,7 @@
-local MODSTRINGS = require "modstrings"
+local env = env
+GLOBAL.setfenv(1, GLOBAL)
+
+local MODSTRINGS = env.import "strings"
 
 local worldtimerkey = {
 	bearger 	= "bearger_timetospawn",
