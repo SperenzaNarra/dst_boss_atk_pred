@@ -115,9 +115,9 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 	local entity = CreateEntity()
 	entity:DoPeriodicTask(0.5, function()
-		if ThePlayer == nil then return end
+		if TheWorld == nil or TheWorld.net == nil then return end
 
-		local secondsToAttack = ThePlayer.player_classified.hound_time_to_attack
+		local secondsToAttack = TheWorld.net.boss_attack_predictor.hound_time_to_attack
 
 		local text = MODSTRINGS.WIDGET.NO_HOUND
 
@@ -173,7 +173,7 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 	local nametoattacklast = nil
 
 	entity:DoPeriodicTask(0.5, function()
-		if ThePlayer == nil then return end
+		if TheWorld == nil or TheWorld.net == nil then return end
 
 		local secondsToAttack 	= nil
 		local nametoattack 		= nil
@@ -183,7 +183,7 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		for key, val in pairs(bosses_table.worldtimerkey) do
 			if GetModConfigDataLocal(key) then
 				local target = key .. "_time_to_attack"
-				attackTimer[key] = ThePlayer.player_classified[target]
+				attackTimer[key] = TheWorld.net.boss_attack_predictor[target]
 			end
 		end
 
@@ -274,10 +274,10 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 	local entity = CreateEntity()
 	entity:DoPeriodicTask(0.5, function()
-		if ThePlayer == nil then return end
+		if TheWorld == nil or TheWorld.net == nil then return end
 
-		local secondsToNextPhase = ThePlayer.player_classified.rift_time_to_next_phase
-		local currentPhase = ThePlayer.player_classified.rift_current_phase
+		local secondsToNextPhase = TheWorld.net.boss_attack_predictor.rift_time_to_next_phase
+		local currentPhase = TheWorld.net.boss_attack_predictor.rift_current_phase
 
 		local affinity = "lunar"
 		if TheWorld:HasTag("cave") then
@@ -302,14 +302,14 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 			text = sAttack .. "\n" .. ttDays
 
-			if ThePlayer.player_classified.rift_time_plus then
+			if TheWorld.net.boss_attack_predictor.rift_time_plus then
 				text = sAttack .. "+\n" .. ttDays .. "+"
 			else
 				text = sAttack .. "\n" .. ttDays
 			end
 
 			local sWave = ""
-			local waveleft = ThePlayer.player_classified.rift_wave_left
+			local waveleft = TheWorld.net.boss_attack_predictor.rift_wave_left
 			if waveleft ~= nil then
 				text = string.format(MODSTRINGS.WIDGET.RIFT_WAVE_LEFT, waveleft) .. "\n" .. text
 			end
@@ -328,15 +328,26 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 	altercmd:resetPosition()
 end)
 
+local AddWorldNetPostInit = function(fn)
+	env.AddPrefabPostInitAny(function(inst)
+		if TheWorld == nil then return end
+		if inst ~= TheWorld.net then return end
+		fn(inst)
+	end)
+end
+
+AddWorldNetPostInit(function(inst)
+	inst.boss_attack_predictor = {}
+end)
 
 -- for hounds
-env.AddPrefabPostInit("player_classified", function(inst)
-	inst.hound_time_to_attack = nil
-	inst.net_hound_time_to_attack = net_int(inst.GUID, "hound_time_to_attack", "hound_time_to_attack_dirty")
+AddWorldNetPostInit(function(inst)
+	inst.boss_attack_predictor.hound_time_to_attack = nil
+	inst.boss_attack_predictor.net_hound_time_to_attack = net_int(inst.GUID, "hound_time_to_attack", "hound_time_to_attack_dirty")
 
 	if not TheNet:IsDedicated() then
 		inst:ListenForEvent("hound_time_to_attack_dirty", function(inst)
-			inst.hound_time_to_attack = inst.net_hound_time_to_attack:value()
+			inst.boss_attack_predictor.hound_time_to_attack = inst.boss_attack_predictor.net_hound_time_to_attack:value()
 		end)
 	end
 
@@ -346,7 +357,7 @@ env.AddPrefabPostInit("player_classified", function(inst)
 
 	if TheWorld.components.hounded ~= nil then
 		inst:DoPeriodicTask(0.5, function()
-			inst.net_hound_time_to_attack:set(TheWorld.components.hounded:GetTimeToAttack())
+			inst.boss_attack_predictor.net_hound_time_to_attack:set(TheWorld.components.hounded:GetTimeToAttack())
 		end)
 	end
 end)
@@ -357,17 +368,17 @@ local predict_constructor = function(inst, name, key, isinst)
 	local time_to_attack_dirty = time_to_attack .. "_dirty"
 	local net_time_to_attack = "net_" .. name .. "_time_to_attack"
 
-	inst[time_to_attack] = nil
-	inst[net_time_to_attack] = net_int(inst.GUID, time_to_attack, time_to_attack_dirty)
+	inst.boss_attack_predictor[time_to_attack] = nil
+	inst.boss_attack_predictor[net_time_to_attack] = net_int(inst.GUID, time_to_attack, time_to_attack_dirty)
 
 	-- client
 	if not TheNet:IsDedicated() then
 		inst:ListenForEvent(time_to_attack_dirty, function(inst)
-			local timeleft = inst[net_time_to_attack]:value()
+			local timeleft = inst.boss_attack_predictor[net_time_to_attack]:value()
 			if timeleft == nil or timeleft < 0 then
-				inst[time_to_attack] = nil
+				inst.boss_attack_predictor[time_to_attack] = nil
 			else
-				inst[time_to_attack] = timeleft
+				inst.boss_attack_predictor[time_to_attack] = timeleft
 			end
 		end)
 	end
@@ -393,51 +404,51 @@ local predict_constructor = function(inst, name, key, isinst)
 		local timeleft = bosses:GetTimeLeft(name)
 
 		if timeleft ~= nil then
-			inst[net_time_to_attack]:set(timeleft)
+			inst.boss_attack_predictor[net_time_to_attack]:set(timeleft)
 		else
-			inst[net_time_to_attack]:set(-1)
+			inst.boss_attack_predictor[net_time_to_attack]:set(-1)
 		end
 	end)
 end
 
 for key, val in pairs(bosses_table.worldtimerkey) do
-	env.AddPrefabPostInit("player_classified", function(inst)
+	AddWorldNetPostInit(function(inst)
 		predict_constructor(inst, key, val, bosses_table.nametotag[key].inst)
 	end)
 end
 
 -- for rifts
-env.AddPrefabPostInit("player_classified", function(inst)
-	inst.rift_time_to_next_phase = nil
-	inst.net_rift_time_to_next_phase = net_int(inst.GUID, "rift_time_to_next_phase", "rift_time_to_next_phase_dirty")
-	inst.rift_time_plus = nil
-	inst.net_rift_time_plus = net_bool(inst.GUID, "rift_time_plus", "rift_time_plus_dirty")
-	inst.rift_current_phase = 0
-	inst.net_rift_current_phase = net_int(inst.GUID, "rift_current_phase", "rift_current_phase_dirty")
-	inst.rift_wave_left = nil
-	inst.net_rift_wave_left = net_int(inst.GUID, "rift_wave_left", "rift_wave_left_dirty")
+AddWorldNetPostInit(function(inst)
+	inst.boss_attack_predictor.rift_time_to_next_phase = nil
+	inst.boss_attack_predictor.net_rift_time_to_next_phase = net_int(inst.GUID, "rift_time_to_next_phase", "rift_time_to_next_phase_dirty")
+	inst.boss_attack_predictor.rift_time_plus = nil
+	inst.boss_attack_predictor.net_rift_time_plus = net_bool(inst.GUID, "rift_time_plus", "rift_time_plus_dirty")
+	inst.boss_attack_predictor.rift_current_phase = 0
+	inst.boss_attack_predictor.net_rift_current_phase = net_int(inst.GUID, "rift_current_phase", "rift_current_phase_dirty")
+	inst.boss_attack_predictor.rift_wave_left = nil
+	inst.boss_attack_predictor.net_rift_wave_left = net_int(inst.GUID, "rift_wave_left", "rift_wave_left_dirty")
 
 	if not TheNet:IsDedicated() then
 		inst:ListenForEvent("rift_time_to_next_phase_dirty", function(inst)
-			local timeleft = inst.net_rift_time_to_next_phase:value()
+			local timeleft = inst.boss_attack_predictor.net_rift_time_to_next_phase:value()
 			if timeleft == nil or timeleft < 0 then
-				inst.rift_time_to_next_phase = nil
+				inst.boss_attack_predictor.rift_time_to_next_phase = nil
 			else
-				inst.rift_time_to_next_phase = timeleft
+				inst.boss_attack_predictor.rift_time_to_next_phase = timeleft
 			end
 		end)
 		inst:ListenForEvent("rift_time_plus_dirty", function(inst)
-			inst.rift_time_plus = inst.net_rift_time_plus:value()
+			inst.boss_attack_predictor.rift_time_plus = inst.boss_attack_predictor.net_rift_time_plus:value()
 		end)
 		inst:ListenForEvent("rift_current_phase_dirty", function(inst)
-			inst.rift_current_phase = inst.net_rift_current_phase:value()
+			inst.boss_attack_predictor.rift_current_phase = inst.boss_attack_predictor.net_rift_current_phase:value()
 		end)
 		inst:ListenForEvent("rift_wave_left_dirty", function(inst)
-			local waveleft = inst.net_rift_wave_left:value()
+			local waveleft = inst.boss_attack_predictor.net_rift_wave_left:value()
 			if waveleft == nil or waveleft < 0 then
-				inst.rift_wave_left = nil
+				inst.boss_attack_predictor.rift_wave_left = nil
 			else
-				inst.rift_wave_left = waveleft
+				inst.boss_attack_predictor.rift_wave_left = waveleft
 			end
 		end)
 	end
@@ -455,7 +466,7 @@ env.AddPrefabPostInit("player_classified", function(inst)
 			local rifts = TheWorld.components.riftspawner:GetRifts()
 
 			for rift, rift_prefab in pairs(rifts) do
-				inst.net_rift_current_phase:set(rift._stage)
+				inst.boss_attack_predictor.net_rift_current_phase:set(rift._stage)
 
 				timeleft = rift.components.timer:GetTimeLeft("trynextstage")
 				if timeleft == nil then
@@ -484,23 +495,23 @@ env.AddPrefabPostInit("player_classified", function(inst)
 					end
 				end
 
-				inst.net_rift_time_to_next_phase:set(timeleft)
-				inst.net_rift_wave_left:set(waveleft)
-				inst.net_rift_time_plus:set(timeplus)
+				inst.boss_attack_predictor.net_rift_time_to_next_phase:set(timeleft)
+				inst.boss_attack_predictor.net_rift_wave_left:set(waveleft)
+				inst.boss_attack_predictor.net_rift_time_plus:set(timeplus)
 
 				-- assume only one rift per world
 				return
 			end
 
-			inst.net_rift_current_phase:set(0)
-			inst.net_rift_wave_left:set(-1)
+			inst.boss_attack_predictor.net_rift_current_phase:set(0)
+			inst.boss_attack_predictor.net_rift_wave_left:set(-1)
 
 			timeleft = worldsettingstimer:GetTimeLeft(RIFTSPAWN_TIMERNAME)
 			if timeleft == nil then
-				inst.net_rift_time_to_next_phase:set(-1)
+				inst.boss_attack_predictor.net_rift_time_to_next_phase:set(-1)
 			else
-				inst.net_rift_time_to_next_phase:set(timeleft)
-				inst.net_rift_time_plus:set(false)
+				inst.boss_attack_predictor.net_rift_time_to_next_phase:set(timeleft)
+				inst.boss_attack_predictor.net_rift_time_plus:set(false)
 			end
 		end)
 	end
