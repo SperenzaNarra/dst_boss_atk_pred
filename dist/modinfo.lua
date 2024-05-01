@@ -291,7 +291,7 @@ name = t("Boss Attack Predictor")
 
 description = t("Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only")
 author = "Sperenza & YiFei Zhu"
-version = "2.3.5"
+version = "2.3.6"
 
 api_version_dst = 10
 priority = 0

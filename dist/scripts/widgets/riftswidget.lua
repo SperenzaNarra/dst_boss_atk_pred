@@ -20,7 +20,7 @@ local RiftsWidget = Class(Widget, function(self, userConfig, width, height, owne
 	end
 	self.bgimage:ScaleToSize(self.width, self.height)
 	self.bgimage:SetTint(1.0, 1.0, 1.0, 1.0)
-	self.bgimage:SetBlendMode(1)
+	self.bgimage:SetBlendMode(BLENDMODE.AlphaBlended)
 
 	self.label = self:AddChild(Text("stint-ucr", userConfig.fontSize, "No rifts\npredicted!"))
 	self.label:SetPosition(3.0, 0.0, 0.0)

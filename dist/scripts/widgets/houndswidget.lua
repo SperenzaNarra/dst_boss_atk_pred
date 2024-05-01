@@ -20,7 +20,7 @@ local HoundsWidget = Class(Widget, function(self, userConfig, width, height, own
 	end
 	self.bgimage:ScaleToSize(self.width, self.height)
 	self.bgimage:SetTint(1.0, 1.0, 1.0, 1.0)
-	self.bgimage:SetBlendMode(1)
+	self.bgimage:SetBlendMode(BLENDMODE.AlphaBlended)
 
 	self.label = self:AddChild(Text("stint-ucr", userConfig.fontSize, "No attack\npredicted!"))
 	self.label:SetPosition(3.0, 0.0, 0.0)

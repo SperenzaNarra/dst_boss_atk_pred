@@ -101,14 +101,14 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
-	local container = hud:AddChild(Widget("RPGMonsterInfoContainer"))
+	local container = hud.containerroot:AddChild(Widget("RPGMonsterInfoContainer"))
 	container:SetHAnchor(hAnchor)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
-	container:SetClickable(false)
 	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 	local houndbar = container:AddChild(HoundsWidget(config, width, height, container))
+	hud.houndswidget = houndbar
 
 	houndbar:Show()
 
@@ -156,14 +156,14 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
-	local container = hud:AddChild(Widget("RPGMonsterInfoContainer"))
+	local container = hud.containerroot:AddChild(Widget("RPGMonsterInfoContainer"))
 	container:SetHAnchor(hAnchor)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
-	container:SetClickable(false)
 	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 	local bossesbar = container:AddChild(BossesWidget(config, width, height, container))
+	hud.bosseswidget = bossesbar
 
 	bossesbar:Show()
 
@@ -260,14 +260,14 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		widget_xPos, widget_yPos,
 		width*2 + widget_padding)
 
-	local container = hud:AddChild(Widget("RPGMonsterInfoContainer"))
+	local container = hud.containerroot:AddChild(Widget("RPGMonsterInfoContainer"))
 	container:SetHAnchor(hAnchor)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
-	container:SetClickable(false)
 	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 	local riftbar = container:AddChild(RiftsWidget(config, width, height, container))
+	hud.riftswidget = riftbar
 
 	riftbar:Show()
 
@@ -326,6 +326,40 @@ end)
 env.AddClassPostConstruct("widgets/controls", function(hud)
 	altercmd:resetPosition()
 end)
+
+-- https://steamcommunity.com/sharedfiles/filedetails/?id=2885137047
+-- Register the widgets against "UI Drag Zoom MirrorFlip" mod
+local modCompat_DragZoomUI = function()
+	TUNING.DRAGZOOMUIMOD = TUNING.DRAGZOOMUIMOD or {}
+	TUNING.DRAGZOOMUIMOD.UIList = TUNING.DRAGZOOMUIMOD.UIList or {}
+
+	local myModUIList = {
+		["widgets/controls"] = {
+			houndswidget = "houndswidget",
+			bosseswidget = "bosseswidget",
+			riftswidget = "riftswidget",
+		}
+	}
+
+	local function mergeTable(self, from, first)
+		if type(self) ~= "table" and type(from) ~= "table" then
+			return
+		end
+		if first then
+			from = deepcopy(from)
+		end
+		for k, v in pairs(from) do
+			if not self[k] then
+				self[k] = v
+			elseif type(self[k]) == "table" and type(v) == "table" then
+				mergeTable(self[k], v)
+			end
+		end
+	end
+
+	mergeTable(TUNING.DRAGZOOMUIMOD.UIList, myModUIList)
+end
+modCompat_DragZoomUI()
 
 local AddWorldNetPostInit = function(fn)
 	env.AddPrefabPostInitAny(function(inst)
