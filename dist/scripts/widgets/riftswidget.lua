@@ -14,9 +14,9 @@ local RiftsWidget = Class(Widget, function(self, userConfig, width, height, owne
 
 	self.bgimage = self:AddChild(Image())
 	if TheWorld:HasTag("cave") then
-		self.bgimage:SetTexture("images/script/shadow_rift_phase_0.xml", "../tex/shadow_rift_phase_0.tex")
+		self.bgimage:SetTexture("images/riftswidget/shadow_0.xml", "shadow_0.tex")
 	else
-		self.bgimage:SetTexture("images/script/lunar_rift_phase_0.xml", "../tex/lunar_rift_phase_0.tex")
+		self.bgimage:SetTexture("images/riftswidget/lunar_0.xml", "lunar_0.tex")
 	end
 	self.bgimage:ScaleToSize(self.width, self.height)
 	self.bgimage:SetTint(1.0, 1.0, 1.0, 1.0)
@@ -33,8 +33,8 @@ function RiftsWidget:SetLabel(text)
 end
 
 function RiftsWidget:SetTexture(affinity, phase)
-	local name = affinity.."_rift_phase_"..phase;
-	self.bgimage:SetTexture("images/script/"..name..".xml", "../tex/"..name..".tex")
+	local name = affinity.."_"..phase;
+	self.bgimage:SetTexture("images/riftswidget/"..name..".xml", ""..name..".tex")
 end
 
 return RiftsWidget

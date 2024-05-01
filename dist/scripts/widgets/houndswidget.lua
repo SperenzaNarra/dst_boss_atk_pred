@@ -14,9 +14,9 @@ local HoundsWidget = Class(Widget, function(self, userConfig, width, height, own
 
 	self.bgimage = self:AddChild(Image())
 	if TheWorld:HasTag("cave") then
-		self.bgimage:SetTexture("images/depthwormswidget.xml", "depthwormswidget.tex")
+		self.bgimage:SetTexture("images/houndswidget/depthworms.xml", "depthworms.tex")
 	else
-		self.bgimage:SetTexture("images/houndswidget.xml", "houndswidget.tex")
+		self.bgimage:SetTexture("images/houndswidget/hounds.xml", "hounds.tex")
 	end
 	self.bgimage:ScaleToSize(self.width, self.height)
 	self.bgimage:SetTint(1.0, 1.0, 1.0, 1.0)

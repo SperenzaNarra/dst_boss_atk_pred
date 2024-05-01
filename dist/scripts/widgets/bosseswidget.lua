@@ -14,9 +14,9 @@ local BossesWidget = Class(Widget, function(self, userConfig, width, height, own
 
 	self.bgimage = self:AddChild(Image())
 	if TheWorld:HasTag("cave") then
-		self.bgimage:SetTexture("images/script/cavewidget.xml", "../tex/cavewidget.tex")
+		self.bgimage:SetTexture("images/bosseswidget/cave.xml", "cave.tex")
 	else
-		self.bgimage:SetTexture("images/script/masterwidget.xml", "../tex/masterwidget.tex")
+		self.bgimage:SetTexture("images/bosseswidget/master.xml", "master.tex")
 	end
 	self.bgimage:ScaleToSize(self.width, self.height)
 	self.bgimage:SetTint(1.0, 1.0, 1.0, 1.0)
@@ -37,11 +37,11 @@ function BossesWidget:SetTexture(xml, tex)
 end
 
 function BossesWidget:SetTextureDefaultCave()
-	self.bgimage:SetTexture("images/script/cavewidget.xml", "../tex/cavewidget.tex")
+	self.bgimage:SetTexture("images/bosseswidget/cave.xml", "cave.tex")
 end
 
 function BossesWidget:SetTextureDefaultMaster()
-	self.bgimage:SetTexture("images/script/masterwidget.xml", "../tex/masterwidget.tex")
+	self.bgimage:SetTexture("images/bosseswidget/master.xml", "master.tex")
 end
 
 return BossesWidget
