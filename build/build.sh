@@ -4,7 +4,7 @@ set -ex
 
 REPO="$PWD"
 
-apk add gimp python3 py3-pillow
+apk add gimp python3 py3-pillow optipng
 
 pushd xcf
 
@@ -27,6 +27,10 @@ EOF
 done
 
 for FILE in */*.png; do
+  # GIMP-generated PNG files contain time in metadata, but git doesn't play
+  # nicely if files inside are non-deterministic.
+  optipng -strip all "$FILE"
+
   "${REPO}/build/mod_tools/png" "$FILE" unused_arg
 done
 
