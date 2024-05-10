@@ -1,0 +1,28 @@
+name: Workflow
+
+on: push
+
+jobs:
+  compile-texture:
+    runs-on: ubuntu-latest
+    container: alpine:latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Install git
+        run: |
+          apk add git
+          git config --global --add safe.directory $PWD
+
+      - uses: actions/checkout@v4
+
+      - name: Compile Textures
+        run: |
+          apk add bash
+          bash build/build.sh
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Compile Textures
