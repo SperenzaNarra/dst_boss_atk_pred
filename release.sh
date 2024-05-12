@@ -62,6 +62,6 @@ else
     PUBLISHEDFILEID=2510473186
 fi
 
-git for-each-ref "$GITHUB_REF" --format='%(contents)' > "${TMPDIR}/annotation"
+git for-each-ref refs/tags/"v${VERSION}" --format='%(contents)' > "${TMPDIR}/annotation"
 
 build/dst-workshop-tool "$PUBLISHEDFILEID" "$(realpath dist)" "$(< "${TMPDIR}/annotation")" interface utility tweak all_clients_require_mod "version:${VERSION}"
