@@ -4,7 +4,7 @@ local STRINGS = {
 		zh = "Boss预测器",
 	},
 	{
-		en = "Predict boss attack/respown with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only",
+		en = "Predict boss attack/respawn with displayed timer in a widget.\nAlso will display the time of Ruins Regeneration and Ancient Gateway Cooldown\n\nHas same features as Hound Attack Predictor, and additionally also predicts Rift cycles\n\nDon't Starve Together only",
 		zh = "本插件功能是将DST纯净Boss会出现的时间显示在左上角的贴图上，或者任何你想放的角落\n有猎犬预测器的功能，并且有侦测裂隙循环的功能，能够自由开关闭其中的组件\n\n饥荒联机版专属",
 	},
 	{

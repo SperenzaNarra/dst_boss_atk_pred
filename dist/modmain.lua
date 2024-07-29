@@ -90,40 +90,116 @@ local MODSTRINGS = env.import "strings"
 local bossprioritytype = GetModConfigDataLocal("prioritytype")
 local showname = GetModConfigDataLocal("showname")
 
--- hound
 env.AddClassPostConstruct("widgets/controls", function(hud)
-	if not GetModConfigDataLocal("houndenable") then return end
-
 	local width = widgetwidth
 	local height = widgetheight
-	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
+	local xPos, yPos, xOffset, hAnchor, vAnchor = altercmd:getPosition(
 		GetModConfigDataLocal("widgetalign"),
-		widget_xPos, widget_yPos,
-		width*2 + widget_padding)
+		widget_xPos, widget_yPos, width + widget_padding)
 
 	local container = hud.containerroot:AddChild(Widget("RPGMonsterInfoContainer"))
 	container:SetHAnchor(hAnchor)
 	container:SetVAnchor(vAnchor)
 	container:SetPosition(xPos, yPos, 0.0)
 	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
+	container:SetScale(1, 1, 1)
 
-	local houndbar = container:AddChild(HoundsWidget(config, width, height, container))
-	hud.houndswidget = houndbar
+	-- hound
+	local houndswidgetinit = function()
+		if not GetModConfigDataLocal("houndenable") then return end
 
-	houndbar:Show()
+		local houndbar = container:AddChild(HoundsWidget(config, width, height, container))
+		hud.houndswidget = houndbar
+		houndbar:SetPosition(0.0, 0.0, 0.0)
+		houndbar:Show()
 
-	local entity = CreateEntity()
-	entity:DoPeriodicTask(0.5, function()
-		if TheWorld == nil or TheWorld.net == nil then return end
+		local entity = CreateEntity()
+		entity:DoPeriodicTask(0.5, function()
+			if TheWorld == nil or TheWorld.net == nil then return end
 
-		local secondsToAttack = TheWorld.net.boss_attack_predictor.hound_time_to_attack
+			local secondsToAttack = TheWorld.net.boss_attack_predictor.hound_time_to_attack
 
-		local text = MODSTRINGS.WIDGET.NO_HOUND
+			local text = MODSTRINGS.WIDGET.NO_HOUND
 
-		if secondsToAttack ~= nil then
-			if secondsToAttack < 0 then
-				text = MODSTRINGS.WIDGET.HOUND_CURRENT
-			else
+			if secondsToAttack ~= nil then
+				if secondsToAttack < 0 then
+					text = MODSTRINGS.WIDGET.HOUND_CURRENT
+				else
+					local sAttack
+					local ttAttack = math.floor(secondsToAttack)
+					local minutes = math.floor(ttAttack / 60)
+					local seconds = ttAttack - (minutes * 60)
+
+					if minutes == 0 then
+						sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
+					else
+						sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
+					end
+
+					local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
+
+					text = sAttack .. "\n" .. ttDays
+				end
+			end
+
+			houndbar:SetLabel(text)
+		end)
+	end
+
+	-- bosses
+	local bosseswidgetinit = function()
+		if not GetModConfigDataLocal("bossenable") then return end
+
+		local bossesbar = container:AddChild(BossesWidget(config, width, height, container))
+		hud.bosseswidget = bossesbar
+		bossesbar:SetPosition(xOffset, 0.0, 0.0)
+		bossesbar:Show()
+
+		local entity = CreateEntity()
+		local timerkeytable = bosses_table.worldtimerkey
+		local nametoattacklast = nil
+
+		entity:DoPeriodicTask(0.5, function()
+			if TheWorld == nil or TheWorld.net == nil then return end
+
+			local secondsToAttack 	= nil
+			local nametoattack 		= nil
+			local text = MODSTRINGS.WIDGET.NO_BOSS
+			local attackTimer = {}
+
+			for key, val in pairs(bosses_table.worldtimerkey) do
+				if GetModConfigDataLocal(key) then
+					local target = key .. "_time_to_attack"
+					attackTimer[key] = TheWorld.net.boss_attack_predictor[target]
+				end
+			end
+
+			local updatetimer = function(name, timer)
+				if timer ~= nil and (secondsToAttack == nil or secondsToAttack > timer) then
+					nametoattack = name
+					secondsToAttack = timer
+				end
+			end
+
+			for name, timer in pairs(attackTimer) do
+				if bossprioritytype == "leasttimefirst" then
+					updatetimer(name, timer)
+				end
+
+				if bossprioritytype == "attacktimefirst" then
+					if nametoattack == nil or (not bosses_table.nametoattacktimefirst[nametoattack]) or bosses_table.nametoattacktimefirst[name] then
+						updatetimer(name, timer)
+					end
+				end
+
+				if bossprioritytype == "spawntimefirst" then
+					if nametoattack == nil or (not bosses_table.nametospawntimefirst[nametoattack]) or bosses_table.nametospawntimefirst[name] then
+						updatetimer(name, timer)
+					end
+				end
+			end
+
+			if secondsToAttack ~= nil then
 				local sAttack
 				local ttAttack = math.floor(secondsToAttack)
 				local minutes = math.floor(ttAttack / 60)
@@ -138,193 +214,91 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 				local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
 
 				text = sAttack .. "\n" .. ttDays
-			end
-		end
-
-		houndbar:SetLabel(text)
-	end)
-end)
-
--- bosses
-env.AddClassPostConstruct("widgets/controls", function(hud)
-	if not GetModConfigDataLocal("bossenable") then return end
-
-	local width = widgetwidth
-	local height = widgetheight
-	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigDataLocal("widgetalign"),
-		widget_xPos, widget_yPos,
-		width*2 + widget_padding)
-
-	local container = hud.containerroot:AddChild(Widget("RPGMonsterInfoContainer"))
-	container:SetHAnchor(hAnchor)
-	container:SetVAnchor(vAnchor)
-	container:SetPosition(xPos, yPos, 0.0)
-	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
-
-	local bossesbar = container:AddChild(BossesWidget(config, width, height, container))
-	hud.bosseswidget = bossesbar
-
-	bossesbar:Show()
-
-	local entity = CreateEntity()
-	local timerkeytable = bosses_table.worldtimerkey
-	local nametoattacklast = nil
-
-	entity:DoPeriodicTask(0.5, function()
-		if TheWorld == nil or TheWorld.net == nil then return end
-
-		local secondsToAttack 	= nil
-		local nametoattack 		= nil
-		local text = MODSTRINGS.WIDGET.NO_BOSS
-		local attackTimer = {}
-
-		for key, val in pairs(bosses_table.worldtimerkey) do
-			if GetModConfigDataLocal(key) then
-				local target = key .. "_time_to_attack"
-				attackTimer[key] = TheWorld.net.boss_attack_predictor[target]
-			end
-		end
-
-		local updatetimer = function(name, timer)
-			if timer ~= nil and (secondsToAttack == nil or secondsToAttack > timer) then
-				nametoattack = name
-				secondsToAttack = timer
-			end
-		end
-
-		for name, timer in pairs(attackTimer) do
-			if bossprioritytype == "leasttimefirst" then
-				updatetimer(name, timer)
-			end
-
-			if bossprioritytype == "attacktimefirst" then
-				if nametoattack == nil or (not bosses_table.nametoattacktimefirst[nametoattack]) or bosses_table.nametoattacktimefirst[name] then
-					updatetimer(name, timer)
+				if showname then
+					text = bosses_table.nametostring[nametoattack] .. "\n" .. text
 				end
-			end
 
-			if bossprioritytype == "spawntimefirst" then
-				if nametoattack == nil or (not bosses_table.nametospawntimefirst[nametoattack]) or bosses_table.nametospawntimefirst[name] then
-					updatetimer(name, timer)
+				if nametoattacklast ~= nametoattack then
+					bossesbar:SetTexture(bosses_table.nametoscript[nametoattack], bosses_table.nametoimage[nametoattack])
+					nametoattacklast = nametoattack
 				end
-			end
-		end
-
-		if secondsToAttack ~= nil then
-			local sAttack
-			local ttAttack = math.floor(secondsToAttack)
-			local minutes = math.floor(ttAttack / 60)
-			local seconds = ttAttack - (minutes * 60)
-
-			if minutes == 0 then
-				sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
 			else
-				sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
+				if nametoattacklast ~= nil then
+					if TheWorld:HasTag("cave") then
+						bossesbar:SetTextureDefaultCave()
+					else
+						bossesbar:SetTextureDefaultMaster()
+					end
+					nametoattacklast = nil
+				end
 			end
 
-			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
+			bossesbar:SetLabel(text)
+		end)
+	end
 
-			text = sAttack .. "\n" .. ttDays
-			if showname then
-				text = bosses_table.nametostring[nametoattack] .. "\n" .. text
+	-- rift
+	local riftwidgetinit = function()
+		if not GetModConfigDataLocal("riftenable") then return end
+
+		local riftbar = container:AddChild(RiftsWidget(config, width, height, container))
+		hud.riftswidget = riftbar
+		riftbar:SetPosition(xOffset * 2, 0.0, 0.0)
+		riftbar:Show()
+
+		local entity = CreateEntity()
+		entity:DoPeriodicTask(0.5, function()
+			if TheWorld == nil or TheWorld.net == nil then return end
+
+			local secondsToNextPhase = TheWorld.net.boss_attack_predictor.rift_time_to_next_phase
+			local currentPhase = TheWorld.net.boss_attack_predictor.rift_current_phase
+
+			local affinity = "lunar"
+			if TheWorld:HasTag("cave") then
+				affinity = "shadow"
 			end
 
-			if nametoattacklast ~= nametoattack then
-				bossesbar:SetTexture(bosses_table.nametoscript[nametoattack], bosses_table.nametoimage[nametoattack])
-				nametoattacklast = nametoattack
-			end
-		else
-			if nametoattacklast ~= nil then
-				if TheWorld:HasTag("cave") then
-					bossesbar:SetTextureDefaultCave()
+			local text = MODSTRINGS.WIDGET.NO_RIFT
+
+			if secondsToNextPhase ~= nil then
+				local sAttack
+				local ttAttack = math.floor(secondsToNextPhase)
+				local minutes = math.floor(ttAttack / 60)
+				local seconds = ttAttack - (minutes * 60)
+
+				if minutes == 0 then
+					sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
 				else
-					bossesbar:SetTextureDefaultMaster()
+					sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
 				end
-				nametoattacklast = nil
-			end
-		end
 
-		bossesbar:SetLabel(text)
-	end)
-end)
+				local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
 
--- rift
-env.AddClassPostConstruct("widgets/controls", function(hud)
-	if not GetModConfigDataLocal("riftenable") then return end
-
-	local width = widgetwidth
-	local height = widgetheight
-	local xPos, yPos, hAnchor, vAnchor = altercmd:getPosition(
-		GetModConfigDataLocal("widgetalign"),
-		widget_xPos, widget_yPos,
-		width*2 + widget_padding)
-
-	local container = hud.containerroot:AddChild(Widget("RPGMonsterInfoContainer"))
-	container:SetHAnchor(hAnchor)
-	container:SetVAnchor(vAnchor)
-	container:SetPosition(xPos, yPos, 0.0)
-	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
-
-	local riftbar = container:AddChild(RiftsWidget(config, width, height, container))
-	hud.riftswidget = riftbar
-
-	riftbar:Show()
-
-	local entity = CreateEntity()
-	entity:DoPeriodicTask(0.5, function()
-		if TheWorld == nil or TheWorld.net == nil then return end
-
-		local secondsToNextPhase = TheWorld.net.boss_attack_predictor.rift_time_to_next_phase
-		local currentPhase = TheWorld.net.boss_attack_predictor.rift_current_phase
-
-		local affinity = "lunar"
-		if TheWorld:HasTag("cave") then
-			affinity = "shadow"
-		end
-
-		local text = MODSTRINGS.WIDGET.NO_RIFT
-
-		if secondsToNextPhase ~= nil then
-			local sAttack
-			local ttAttack = math.floor(secondsToNextPhase)
-			local minutes = math.floor(ttAttack / 60)
-			local seconds = ttAttack - (minutes * 60)
-
-			if minutes == 0 then
-				sAttack = string.format(MODSTRINGS.WIDGET.SEC_LEFT, seconds)
-			else
-				sAttack = string.format(MODSTRINGS.WIDGET.MIN_SEC_LEFT, minutes, seconds)
-			end
-
-			local ttDays = string.format(MODSTRINGS.WIDGET.DAYS_LEFT, ttAttack / TUNING.TOTAL_DAY_TIME)
-
-			text = sAttack .. "\n" .. ttDays
-
-			if TheWorld.net.boss_attack_predictor.rift_time_plus then
-				text = sAttack .. "+\n" .. ttDays .. "+"
-			else
 				text = sAttack .. "\n" .. ttDays
+
+				if TheWorld.net.boss_attack_predictor.rift_time_plus then
+					text = sAttack .. "+\n" .. ttDays .. "+"
+				else
+					text = sAttack .. "\n" .. ttDays
+				end
+
+				local sWave = ""
+				local waveleft = TheWorld.net.boss_attack_predictor.rift_wave_left
+				if waveleft ~= nil then
+					text = string.format(MODSTRINGS.WIDGET.RIFT_WAVE_LEFT, waveleft) .. "\n" .. text
+				end
+			elseif currentPhase ~= 0 then
+				text = MODSTRINGS.WIDGET.RIFT_EXPANDING
 			end
 
-			local sWave = ""
-			local waveleft = TheWorld.net.boss_attack_predictor.rift_wave_left
-			if waveleft ~= nil then
-				text = string.format(MODSTRINGS.WIDGET.RIFT_WAVE_LEFT, waveleft) .. "\n" .. text
-			end
-		elseif currentPhase ~= 0 then
-			text = MODSTRINGS.WIDGET.RIFT_EXPANDING
-		end
+			riftbar:SetTexture(affinity, currentPhase)
+			riftbar:SetLabel(text)
+		end)
+	end
 
-		riftbar:SetTexture(affinity, currentPhase)
-		riftbar:SetLabel(text)
-	end)
-end)
-
--- reset positions
--- AddClassPostConstruct has guarenteed invocation order
-env.AddClassPostConstruct("widgets/controls", function(hud)
-	altercmd:resetPosition()
+	houndswidgetinit()
+	bosseswidgetinit()
+	riftwidgetinit()
 end)
 
 -- https://steamcommunity.com/sharedfiles/filedetails/?id=2885137047
