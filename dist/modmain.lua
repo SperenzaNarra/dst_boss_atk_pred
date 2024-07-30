@@ -104,14 +104,17 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 	container:SetScaleMode(SCALEMODE_PROPORTIONAL)
 	container:SetScale(1, 1, 1)
 
+	local locationIdx = 0
+
 	-- hound
 	local houndswidgetinit = function()
 		if not GetModConfigDataLocal("houndenable") then return end
 
 		local houndbar = container:AddChild(HoundsWidget(config, width, height, container))
 		hud.houndswidget = houndbar
-		houndbar:SetPosition(0.0, 0.0, 0.0)
+		houndbar:SetPosition(locationIdx * xOffset, 0.0, 0.0)
 		houndbar:Show()
+		locationIdx = locationIdx + 1
 
 		local entity = CreateEntity()
 		entity:DoPeriodicTask(0.5, function()
@@ -152,8 +155,9 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 		local bossesbar = container:AddChild(BossesWidget(config, width, height, container))
 		hud.bosseswidget = bossesbar
-		bossesbar:SetPosition(xOffset, 0.0, 0.0)
+		bossesbar:SetPosition(locationIdx * xOffset, 0.0, 0.0)
 		bossesbar:Show()
+		locationIdx = locationIdx + 1
 
 		local entity = CreateEntity()
 		local timerkeytable = bosses_table.worldtimerkey
@@ -243,8 +247,9 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 		local riftbar = container:AddChild(RiftsWidget(config, width, height, container))
 		hud.riftswidget = riftbar
-		riftbar:SetPosition(xOffset * 2, 0.0, 0.0)
+		riftbar:SetPosition(locationIdx * xOffset, 0.0, 0.0)
 		riftbar:Show()
+		locationIdx = locationIdx + 1
 
 		local entity = CreateEntity()
 		entity:DoPeriodicTask(0.5, function()
