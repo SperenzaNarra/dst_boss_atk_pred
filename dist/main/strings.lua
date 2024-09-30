@@ -11,6 +11,7 @@ local MODSTRINGS = {
 		NO_HOUND		= "No Attack\nPredicted",
 		NO_BOSS			= "No Boss\nPredicted",
 		NO_RIFT			= "No Rift\nPredicted",
+		DISABLED		= "Prediction\ndisabled",
 		HOUND_CURRENT	= "Attack!",
 		RIFT_WAVE_LEFT	= "%d waves left",
 		RIFT_EXPANDING	= "Expanding!"

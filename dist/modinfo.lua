@@ -130,13 +130,30 @@ local STRINGS = {
 		zh = "高",
 	},
 	{
-		en = "Antlion",
-		zh = "狮蚁",
+		en = "Hound Widget",
+		zh = "猎犬组件",
+		disamb = "title"
 	},
 	{
-		en = "Attack",
-		zh = "袭击",
+		en = "Display Hound Attack",
+		zh = "显示猎犬袭击",
+	},
+	{
+		en = "Depths Worm",
+		zh = "蠕虫",
+	},
+	{
+		en = "Display Depths Worm Attack",
+		zh = "显示蠕虫袭击",
+	},
+	{
+		en = "Boss Widget (Attack)",
+		zh = "Boss组件（袭击）",
 		disamb = "title"
+	},
+	{
+		en = "Antlion",
+		zh = "狮蚁",
 	},
 	{
 		en = "Display Antlion Rage Attack",
@@ -159,8 +176,8 @@ local STRINGS = {
 		zh = "显示独眼巨鹿袭击时间",
 	},
 	{
-		en = "Spawn",
-		zh = "生成",
+		en = "Boss Widget (Spawn)",
+		zh = "Boss组件（生成）",
 		disamb = "title"
 	},
 	{
@@ -250,6 +267,27 @@ local STRINGS = {
 	{
 		en = "Display Ruins Regeneration Time",
 		zh = "显示遗迹的重制时间",
+	},
+	{
+		en = "Rift Widget",
+		zh = "裂隙组件",
+		disamb = "title"
+	},
+	{
+		en = "Lunar Rift",
+		zh = "月亮裂隙",
+	},
+	{
+		en = "Display Lunar Rift Phase",
+		zh = "显示月亮裂隙阶段",
+	},
+	{
+		en = "Shadow Rift",
+		zh = "暗影裂隙",
+	},
+	{
+		en = "Display Shadow Rift Phase",
+		zh = "显示暗影裂隙阶段",
 	},
 }
 
@@ -540,7 +578,28 @@ configuration_options = {
 		},
 		default = 80
 	},
-	AddTitle(t("Attack", "title")),
+	AddTitle(t("Hound Widget", "title")),
+	{
+		name = "hound",
+		label = t("Hound"),
+		hover = t("Display Hound Attack"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	{
+		name = "depthworm",
+		label = t("Depths Worm"),
+		hover = t("Display Depths Worm Attack"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	AddTitle(t("Boss Widget (Attack)", "title")),
 	{
 		name = "antlion",
 		label = t("Antlion"),
@@ -571,7 +630,7 @@ configuration_options = {
 		},
 		default = true
 	},
-	AddTitle(t("Spawn", "title")),
+	AddTitle(t("Boss Widget (Spawn)", "title")),
 	{
 		name = "beequeenhive",
 		label = t("Bee Queen"),
@@ -676,6 +735,27 @@ configuration_options = {
 		name = "atrium_gate_destable",
 		label = t("Ruins Reset"),
 		hover = t("Display Ruins Regeneration Time"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	AddTitle(t("Rift Widget", "title")),
+	{
+		name = "lunar_rift",
+		label = t("Lunar Rift"),
+		hover = t("Display Lunar Rift Phase"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	{
+		name = "shadow_rift",
+		label = t("Shadow Rift"),
+		hover = t("Display Shadow Rift Phase"),
 		options = {
 			{description = t("Enabled"), data = true},
 			{description = t("Disabled"), data = false},

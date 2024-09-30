@@ -120,6 +120,18 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		entity:DoPeriodicTask(0.5, function()
 			if TheWorld == nil or TheWorld.net == nil then return end
 
+			local disabled
+			if TheWorld:HasTag("cave") then
+				disabled = not GetModConfigDataLocal("depthworm")
+			else
+				disabled = not GetModConfigDataLocal("hound")
+			end
+
+			if disabled then
+				houndbar:SetLabel(MODSTRINGS.WIDGET.DISABLED)
+				return
+			end
+
 			local secondsToAttack = TheWorld.net.boss_attack_predictor.hound_time_to_attack
 
 			local text = MODSTRINGS.WIDGET.NO_HOUND
@@ -255,13 +267,26 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		entity:DoPeriodicTask(0.5, function()
 			if TheWorld == nil or TheWorld.net == nil then return end
 
-			local secondsToNextPhase = TheWorld.net.boss_attack_predictor.rift_time_to_next_phase
-			local currentPhase = TheWorld.net.boss_attack_predictor.rift_current_phase
-
 			local affinity = "lunar"
 			if TheWorld:HasTag("cave") then
 				affinity = "shadow"
 			end
+
+			local disabled
+			if TheWorld:HasTag("cave") then
+				disabled = not GetModConfigDataLocal("shadow_rift")
+			else
+				disabled = not GetModConfigDataLocal("lunar_rift")
+			end
+
+			if disabled then
+				riftbar:SetTexture(affinity, 0)
+				riftbar:SetLabel(MODSTRINGS.WIDGET.DISABLED)
+				return
+			end
+
+			local secondsToNextPhase = TheWorld.net.boss_attack_predictor.rift_time_to_next_phase
+			local currentPhase = TheWorld.net.boss_attack_predictor.rift_current_phase
 
 			local text = MODSTRINGS.WIDGET.NO_RIFT
 
