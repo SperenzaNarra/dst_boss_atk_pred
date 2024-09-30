@@ -110,6 +110,12 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 	local houndswidgetinit = function()
 		if not GetModConfigDataLocal("houndenable") then return end
 
+		if TheWorld:HasTag("cave") then
+			if not GetModConfigDataLocal("depthworm") then return end
+		else
+			if not GetModConfigDataLocal("hound") then return end
+		end
+
 		local houndbar = container:AddChild(HoundsWidget(config, width, height, container))
 		hud.houndswidget = houndbar
 		houndbar:SetPosition(locationIdx * xOffset, 0.0, 0.0)
@@ -118,19 +124,7 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 		local entity = CreateEntity()
 		entity:DoPeriodicTask(0.5, function()
-			if TheWorld == nil or TheWorld.net == nil then return end
-
-			local disabled
-			if TheWorld:HasTag("cave") then
-				disabled = not GetModConfigDataLocal("depthworm")
-			else
-				disabled = not GetModConfigDataLocal("hound")
-			end
-
-			if disabled then
-				houndbar:SetLabel(MODSTRINGS.WIDGET.DISABLED)
-				return
-			end
+			if TheWorld.net == nil then return end
 
 			local secondsToAttack = TheWorld.net.boss_attack_predictor.hound_time_to_attack
 
@@ -176,7 +170,7 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 		local nametoattacklast = nil
 
 		entity:DoPeriodicTask(0.5, function()
-			if TheWorld == nil or TheWorld.net == nil then return end
+			if TheWorld.net == nil then return end
 
 			local secondsToAttack 	= nil
 			local nametoattack 		= nil
@@ -257,6 +251,12 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 	local riftwidgetinit = function()
 		if not GetModConfigDataLocal("riftenable") then return end
 
+		if TheWorld:HasTag("cave") then
+			if not GetModConfigDataLocal("shadow_rift") then return end
+		else
+			if not GetModConfigDataLocal("lunar_rift") then return end
+		end
+
 		local riftbar = container:AddChild(RiftsWidget(config, width, height, container))
 		hud.riftswidget = riftbar
 		riftbar:SetPosition(locationIdx * xOffset, 0.0, 0.0)
@@ -265,24 +265,11 @@ env.AddClassPostConstruct("widgets/controls", function(hud)
 
 		local entity = CreateEntity()
 		entity:DoPeriodicTask(0.5, function()
-			if TheWorld == nil or TheWorld.net == nil then return end
+			if TheWorld.net == nil then return end
 
 			local affinity = "lunar"
 			if TheWorld:HasTag("cave") then
 				affinity = "shadow"
-			end
-
-			local disabled
-			if TheWorld:HasTag("cave") then
-				disabled = not GetModConfigDataLocal("shadow_rift")
-			else
-				disabled = not GetModConfigDataLocal("lunar_rift")
-			end
-
-			if disabled then
-				riftbar:SetTexture(affinity, 0)
-				riftbar:SetLabel(MODSTRINGS.WIDGET.DISABLED)
-				return
 			end
 
 			local secondsToNextPhase = TheWorld.net.boss_attack_predictor.rift_time_to_next_phase

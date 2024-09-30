@@ -23,11 +23,6 @@ msgctxt "MODSTRINGS.WIDGET.DAYS_LEFT"
 msgid "%.2f days"
 msgstr ""
 
-#. MODSTRINGS.WIDGET.DISABLED
-msgctxt "MODSTRINGS.WIDGET.DISABLED"
-msgid "Prediction\ndisabled"
-msgstr ""
-
 #. MODSTRINGS.WIDGET.HOUND_CURRENT
 msgctxt "MODSTRINGS.WIDGET.HOUND_CURRENT"
 msgid "Attack!"
@@ -67,4 +62,3 @@ msgstr ""
 msgctxt "MODSTRINGS.WIDGET.SEC_LEFT"
 msgid "%d seconds"
 msgstr ""
-

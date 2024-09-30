@@ -34,11 +34,6 @@ msgctxt "MODSTRINGS.WIDGET.DAYS_LEFT"
 msgid "%.2f days"
 msgstr "%.2f 天"
 
-#. MODSTRINGS.WIDGET.DISABLED
-msgctxt "MODSTRINGS.WIDGET.DISABLED"
-msgid "Prediction\ndisabled"
-msgstr "预测关闭"
-
 #. MODSTRINGS.WIDGET.HOUND_CURRENT
 msgctxt "MODSTRINGS.WIDGET.HOUND_CURRENT"
 msgid "Attack!"
