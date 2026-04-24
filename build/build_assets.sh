@@ -10,19 +10,16 @@ pushd xcf
 
 for DIR in *; do
   echo "$DIR"
-  xvfb-run gimp -n -i --batch-interpreter plug-in-script-fu-eval -b - <<EOF
-  (let* ( (file's (cadr (file-glob "${DIR}/*.xcf" 1))) (filename "") (image 0) (layer 0) )
-    (while (pair? file's)
-      (set! image (car (gimp-file-load RUN-NONINTERACTIVE (car file's) (car file's))))
-      (gimp-image-scale image 128 128)
-      (set! layer (car (gimp-image-merge-visible-layers image CLIP-TO-IMAGE)))
-      (set! filename (string-append (substring (car file's) 0 (- (string-length (car file's)) 4)) ".png"))
-      (gimp-file-save RUN-NONINTERACTIVE image layer filename filename)
-      (gimp-image-delete image)
-      (set! file's (cdr file's))
-      )
-    (gimp-quit 0)
-    )
+  xvfb-run gimp -n -i --batch-interpreter python-fu-eval --quit -b - <<EOF
+import glob
+
+for file in glob.glob("${DIR}/*.xcf"):
+  img = Gimp.file_load(Gimp.RunMode.NONINTERACTIVE, Gio.File.new_for_path(file))
+  img.scale(128, 128)
+  img.merge_visible_layers(Gimp.MergeType.CLIP_TO_IMAGE)
+  filename = file[:-4] + ".png"
+  Gimp.file_save(Gimp.RunMode.NONINTERACTIVE, img, Gio.File.new_for_path(filename))
+  img.delete()
 EOF
 done
 
