@@ -8,6 +8,11 @@ local bossconsole = {}
 local bosscache = {}
 
 function bossconsole:FindBossEntity(name)
+	-- special case
+	if name == "atrium_gate_cooldown" or name == "atrium_gate_destable" then
+		name = "atrium_gate"
+	end
+
 	if bosses.nametotag[name].inst then
 		if bosscache[name] == nil or Ents[bosscache[name].GUID] == nil then
 			bosscache[name] = altercmd:c_findone(name)
