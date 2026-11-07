@@ -249,8 +249,24 @@ local STRINGS = {
 		zh = "拾荒疯猪",
 	},
 	{
+		en = "Rock Master",
+		zh = "岩主"
+	},
+	{
+		en = "Hound Batilisk",
+		zh = "巨型洞穴蝙蝠"
+	},
+	{
 		en = "Display Scrappy Werepig Spawn Time",
 		zh = "显示拾荒疯猪生成时间",
+	},
+	{
+		en = "Display Rock Master Spawn Time",
+		zh = "显示岩主生成时间"
+	},
+	{
+		en = "Display Hound Batilisk Spawn Time",
+		zh = "显示巨型洞穴蝙蝠生成时间"
 	},
 	{
 		en = "Gateway Cooldown",
@@ -715,6 +731,26 @@ configuration_options = {
 		name = "scrappy_werepig",
 		label = t("Scrappy Werepig"),
 		hover = t("Display Scrappy Werepig Spawn Time"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	{
+		name = "rock_master",
+		label = t("Rock Master"),
+		hover = t("Display Rock Master Spawn Time"),
+		options = {
+			{description = t("Enabled"), data = true},
+			{description = t("Disabled"), data = false},
+		},
+		default = true
+	},
+	{
+		name = "hound_batilisk",
+		label = t("Hound Batilisk"),
+		hover = t("Display Hound Batilisk Spawn Time"),
 		options = {
 			{description = t("Enabled"), data = true},
 			{description = t("Disabled"), data = false},
