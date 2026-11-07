@@ -10,7 +10,9 @@ local worldtimerkey = {
 	fruitfly 	= "lordfruitfly_spawntime",
 	malbatross 	= "malbatross_timetospawn",
 	-- cave
-	toadstool   = "toadstool_respawntask",
+	toadstool	= "toadstool_respawntask",
+	rock_master	= "rockyboss_timetospawn",
+	batbosscave = "ChildSpawner_RegenPeriod",
 
 	-- insttimerkey
 	antlion				= "rage",
@@ -42,6 +44,8 @@ local nametotag = {
 	toadstool			= {cave=true, master=false,inst=false},
 	nightmare_werepig	= {cave=true, master=false,inst=false},
 	scrappy_werepig		= {cave=false, master=true,inst=false},
+	rock_master			= {cave=true, master=false,inst=false},
+	batbosscave			= {cave=true,master=false, inst=true},
 }
 
 
@@ -61,6 +65,8 @@ local nametoattacktimefirst = {
 	toadstool			= false,
 	nightmare_werepig	= false,
 	scrappy_werepig		= false,
+	rock_master			= false,
+	batbosscave			= false,
 }
 
 local nametospawntimefirst = {
@@ -79,6 +85,8 @@ local nametospawntimefirst = {
 	toadstool			= true,
 	nightmare_werepig	= true,
 	scrappy_werepig		= true,
+	rock_master			= true,
+	batbosscave			= true,
 }
 
 local nametostring = {
@@ -96,6 +104,8 @@ local nametostring = {
 	toadstool			= STRINGS.NAMES.TOADSTOOL,
 	nightmare_werepig	= STRINGS.NAMES.DAYWALKER,
 	scrappy_werepig		= STRINGS.NAMES.DAYWALKER2,
+	rock_master			= STRINGS.NAMES.ROCKY_BOSS,
+	batbosscave			= STRINGS.NAMES.BAT_BOSS,
 }
 
 local nametoimage = {
@@ -116,6 +126,8 @@ local nametoimage = {
 	toadstool				= "toadstool.tex",
 	nightmare_werepig		= "nightmare_werepig.tex",
 	scrappy_werepig			= "scrappy_werepig.tex",
+	rock_master				= "rock_master.tex",
+	batbosscave				= "hound_batilisk.tex",
 }
 
 local nametoscript = {
@@ -136,6 +148,8 @@ local nametoscript = {
 	toadstool				= "images/bosseswidget/toadstool.xml",
 	nightmare_werepig		= "images/bosseswidget/nightmare_werepig.xml",
 	scrappy_werepig			= "images/bosseswidget/scrappy_werepig.xml",
+	rock_master				= "images/bosseswidget/rock_master.xml",
+	batbosscave				= "images/bosseswidget/hound_batilisk.xml",
 }
 
 return {

@@ -67,6 +67,8 @@ env.Assets =
 	Asset("ATLAS", "images/bosseswidget/toadstool.xml"),
 	Asset("ATLAS", "images/bosseswidget/nightmare_werepig.xml"),
 	Asset("ATLAS", "images/bosseswidget/scrappy_werepig.xml"),
+	Asset("ATLAS", "images/bosseswidget/rock_master.xml"),
+	Asset("ATLAS", "images/bosseswidget/hound_batilisk.xml"),
 
 	Asset("ATLAS", "images/riftswidget/lunar_0.xml"),
 	Asset("ATLAS", "images/riftswidget/lunar_1.xml"),

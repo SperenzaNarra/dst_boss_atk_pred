@@ -249,20 +249,20 @@ local STRINGS = {
 		zh = "拾荒疯猪",
 	},
 	{
-		en = "Rock Master",
-		zh = "岩主"
-	},
-	{
-		en = "Hound Batilisk",
-		zh = "巨型洞穴蝙蝠"
-	},
-	{
 		en = "Display Scrappy Werepig Spawn Time",
 		zh = "显示拾荒疯猪生成时间",
 	},
 	{
+		en = "Rock Master",
+		zh = "岩主"
+	},
+	{
 		en = "Display Rock Master Spawn Time",
 		zh = "显示岩主生成时间"
+	},
+	{
+		en = "Hound Batilisk",
+		zh = "巨型洞穴蝙蝠"
 	},
 	{
 		en = "Display Hound Batilisk Spawn Time",
