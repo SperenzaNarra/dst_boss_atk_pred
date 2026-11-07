@@ -748,7 +748,7 @@ configuration_options = {
 		default = true
 	},
 	{
-		name = "hound_batilisk",
+		name = "batbosscave",
 		label = t("Hound Batilisk"),
 		hover = t("Display Hound Batilisk Spawn Time"),
 		options = {
